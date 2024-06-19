@@ -5,7 +5,7 @@ import Playlist from "../Playlist/Playlist";
 
 const Main = () => {
   return (
-    <div className={`${styles.mainCenterblock} centerblock`}>
+    <div className={styles.centerblock}>
       <Search />
       <h2 className={styles.centerblockH2}>Треки</h2>
       <Filter />

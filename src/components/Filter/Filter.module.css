@@ -1,4 +1,4 @@
-.centerblockFilter {
+.filter {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -11,6 +11,7 @@
   align-items: center;
   margin-bottom: 51px;
 }
+
 .filterTitle {
   font-style: normal;
   font-weight: 400;
@@ -31,4 +32,16 @@
 
 .filterButton:not(:last-child) {
   margin-right: 10px;
+}
+
+._btn-text:hover {
+  border-color: #d9b6ff;
+  color: #d9b6ff;
+  cursor: pointer;
+}
+
+._btn-text:active {
+  border-color: #ad61ff;
+  color: #ad61ff;
+  cursor: pointer;
 }

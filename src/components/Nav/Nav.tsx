@@ -1,18 +1,21 @@
 import Image from "next/image";
 import styles from "./Nav.module.css";
+import classNames from "classnames";
 
 const Nav = () => {
   return (
-    <nav className={`${styles.mainNav} nav`}>
-      <div className={`${styles.navLogo} logo`}>
+    <nav className={styles.nav}>
+      <div className={classNames(styles.navLogo, "logo")}>
         <Image className={styles.logoImage} alt="Skypro logo" src="/img/logo.png" width={114} height={17} />
       </div>
-      <div className={`${styles.navBurger} burger`}>
+
+      <div className={classNames(styles.navBurger, "burger")}>
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
       </div>
-      <div className={`${styles.navMenu} menu`}>
+
+      <div className={classNames(styles.navMenu, "menu")}>
         <ul className={styles.menuList}>
           <li className={styles.menuItem}>
             <a className={styles.menuLink} href="#">
