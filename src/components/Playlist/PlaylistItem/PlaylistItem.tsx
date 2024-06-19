@@ -8,7 +8,7 @@ interface Props {
   TrackTime?: string;
 }
 
-const PlaylistItem = ({ Title, Subtitle, Author, Album, TrackTime }: Props) => {
+const PlaylistItem = ({ Title, Subtitle = "", Author, Album, TrackTime }: Props) => {
   return (
     <div className={styles.playlistItem}>
       <div className={styles.track}>

@@ -1,9 +1,31 @@
+"use client";
+
 import styles from "./Playlist.module.css";
 import mocData from "../../lib/mocData";
 import PlaylistItem from "./PlaylistItem/PlaylistItem";
 import classNames from "classnames";
+import useAllTracks from "@/hooks/useAllTracks";
+import { serializeTrackTime } from "@/helpers/serializeTrackTime";
 
 const Playlist = () => {
+  const [tracks, isLoading, isError] = useAllTracks();
+
+  const traksList =
+    tracks != null ? (
+      tracks.map((track) => (
+        <PlaylistItem
+          key={track.id}
+          Title={track.name}
+          // Subtitle={track.Subtitle}
+          Author={track.author}
+          Album={track.album}
+          TrackTime={serializeTrackTime(track.duration_in_seconds)}
+        />
+      ))
+    ) : (
+      <></>
+    );
+
   return (
     <div className={styles.playlistContent}>
       <div className={styles.playlistTitle}>
@@ -16,18 +38,7 @@ const Playlist = () => {
           </svg>
         </div>
       </div>
-      <div className={styles.playlist}>
-        {mocData.map((track, index) => (
-          <PlaylistItem
-            key={index}
-            Title={track.Title}
-            Subtitle={track.Subtitle}
-            Author={track.Author}
-            Album={track.Album}
-            TrackTime={track.TrackTime}
-          />
-        ))}
-      </div>
+      <div className={styles.playlist}>{traksList}</div>
     </div>
   );
 };
