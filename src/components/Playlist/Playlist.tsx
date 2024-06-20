@@ -13,13 +13,7 @@ const Playlist = () => {
 
   let traksList: Array<any> = [];
 
-  if (isLoading) {
-    console.log("Отрисовка скелетона");
-
-    for (let i = 0; i < 10; i++) {
-      traksList = [...traksList, PlaylistItemSkeleton];
-    }
-  } else if (Array.isArray(tracks)) {
+  if (Array.isArray(tracks)) {
     traksList = tracks.map((track) => (
       <PlaylistItem
         key={track.id}
@@ -44,7 +38,10 @@ const Playlist = () => {
           </svg>
         </div>
       </div>
-      <div className={styles.playlist}>{traksList}</div>
+      <div className={styles.playlist}>
+        {isLoading && <PlaylistItemSkeleton items={10} />}
+        {traksList}
+      </div>
     </div>
   );
 };

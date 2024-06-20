@@ -19,7 +19,7 @@ const Nav = () => {
         <Image className={styles.logoImage} alt="Skypro logo" src="/img/logo.png" width={114} height={17} />
       </div>
 
-      <div className={classNames(styles.navBurger, "burger")} onClick={() => setIsVisible(!isVisible)}>
+      <div className={classNames(styles.navBurger, "burger")} onClick={() => setIsVisible((prev) => !prev)}>
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />

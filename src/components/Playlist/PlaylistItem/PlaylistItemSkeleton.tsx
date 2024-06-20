@@ -1,13 +1,17 @@
-"use client";
-
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./PlaylistItem.module.css";
 
-const PlaylistItemSkeleton = () => {
-  return (
-    <SkeletonTheme baseColor="#202020" highlightColor="#444">
-      <div className={styles.playlistItem}>
+interface Props {
+  items?: number;
+}
+
+const PlaylistItemSkeleton = ({ items = 1 }: Props) => {
+  let tracks: Array<any> = [];
+  for (let i = 1; i <= items; i++) {
+    tracks = [
+      ...tracks,
+      <div className={styles.playlistItem} key={i}>
         <div className={styles.track}>
           <div className={styles.trackTitle}>
             <div className={styles.trackTitleImage}>
@@ -17,35 +21,28 @@ const PlaylistItemSkeleton = () => {
             </div>
             <div className={styles.trackTitleText}>
               <a className={styles.trackTitleLink} href="#">
-                <Skeleton width={"100px"} />
-                <span className={styles.trackTitleSpan}>
-                  <Skeleton width={"100px"} />
-                </span>
+                <Skeleton width={150} />
+                <Skeleton className={styles.trackTitleSpan} width={150} />
               </a>
             </div>
           </div>
           <div className={styles.trackAuthor}>
-            <a className={styles.trackAuthorLink} href="#">
-              <Skeleton width={"100px"} />
-            </a>
+            <Skeleton className={styles.trackAuthorLink} width={150} />
           </div>
           <div className={styles.trackAlbum}>
-            <a className={styles.trackAlbumLink} href="#">
-              <Skeleton width={"100px"} />
-            </a>
+            <Skeleton className={styles.trackAlbumLink} width={150} />
           </div>
           <div className={styles.trackTime}>
             <svg className={styles.trackTimeSvg}>
               <use xlinkHref="img/icon/sprite.svg#icon-like" />
             </svg>
-            <span className={styles.trackTimeText}>
-              <Skeleton />
-            </span>
+            <Skeleton className={styles.trackTimeText} width={30} />
           </div>
         </div>
-      </div>
-    </SkeletonTheme>
-  );
+      </div>,
+    ];
+  }
+  return <>{tracks}</>;
 };
 
 export default PlaylistItemSkeleton;
