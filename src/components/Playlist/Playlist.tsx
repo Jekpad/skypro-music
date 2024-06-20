@@ -6,25 +6,31 @@ import PlaylistItem from "./PlaylistItem/PlaylistItem";
 import classNames from "classnames";
 import useAllTracks from "@/hooks/useAllTracks";
 import { serializeTrackTime } from "@/helpers/serializeTrackTime";
+import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
 
 const Playlist = () => {
   const [tracks, isLoading, isError] = useAllTracks();
 
-  const traksList =
-    tracks != null ? (
-      tracks.map((track) => (
-        <PlaylistItem
-          key={track.id}
-          Title={track.name}
-          // Subtitle={track.Subtitle}
-          Author={track.author}
-          Album={track.album}
-          TrackTime={serializeTrackTime(track.duration_in_seconds)}
-        />
-      ))
-    ) : (
-      <></>
-    );
+  let traksList: Array<any> = [];
+
+  if (isLoading) {
+    console.log("Отрисовка скелетона");
+
+    for (let i = 0; i < 10; i++) {
+      traksList = [...traksList, PlaylistItemSkeleton];
+    }
+  } else if (Array.isArray(tracks)) {
+    traksList = tracks.map((track) => (
+      <PlaylistItem
+        key={track.id}
+        Title={track.name}
+        // Subtitle={track.Subtitle}
+        Author={track.author}
+        Album={track.album}
+        TrackTime={serializeTrackTime(track.duration_in_seconds)}
+      />
+    ));
+  }
 
   return (
     <div className={styles.playlistContent}>

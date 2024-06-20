@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./PlaylistItem.module.css";
 
 interface Props {
