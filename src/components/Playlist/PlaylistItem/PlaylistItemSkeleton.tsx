@@ -20,23 +20,22 @@ const PlaylistItemSkeleton = ({ items = 1 }: Props) => {
               </svg>
             </div>
             <div className={styles.trackTitleText}>
-              <a className={styles.trackTitleLink} href="#">
-                <Skeleton width={150} />
-                <Skeleton className={styles.trackTitleSpan} width={150} />
-              </a>
+              <span className={styles.trackTitleLink}>
+                <Skeleton width={300} />
+              </span>
             </div>
           </div>
           <div className={styles.trackAuthor}>
-            <Skeleton className={styles.trackAuthorLink} width={150} />
+            <Skeleton className={styles.trackAuthorLink} width={200} />
           </div>
           <div className={styles.trackAlbum}>
-            <Skeleton className={styles.trackAlbumLink} width={150} />
+            <Skeleton className={styles.trackAlbumLink} width={200} />
           </div>
           <div className={styles.trackTime}>
             <svg className={styles.trackTimeSvg}>
               <use xlinkHref="img/icon/sprite.svg#icon-like" />
             </svg>
-            <Skeleton className={styles.trackTimeText} width={30} />
+            <Skeleton className={styles.trackTimeText} width={40} />
           </div>
         </div>
       </div>,

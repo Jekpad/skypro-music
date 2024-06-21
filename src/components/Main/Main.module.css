@@ -1,9 +1,15 @@
 .centerblock {
-  width: auto;
+  width: 600px;
   -webkit-box-flex: 3;
   -ms-flex-positive: 3;
   flex-grow: 3;
-  padding: 20px 40px 20px 111px;
+  padding: 20px 40px 75px 111px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.centerblock::-webkit-scrollbar {
+  display: none;
 }
 
 .centerblockH2 {

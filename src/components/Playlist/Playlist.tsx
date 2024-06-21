@@ -1,31 +1,16 @@
-"use client";
-
 import styles from "./Playlist.module.css";
 import mocData from "../../lib/mocData";
 import PlaylistItem from "./PlaylistItem/PlaylistItem";
 import classNames from "classnames";
-import useAllTracks from "@/hooks/useAllTracks";
-import { serializeTrackTime } from "@/helpers/serializeTrackTime";
 import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
+import { TrackType } from "@/types/tracks";
 
-const Playlist = () => {
-  const [tracks, isLoading, isError] = useAllTracks();
+interface Props {
+  tracks: TrackType[];
+  isLoading: boolean;
+}
 
-  let traksList: Array<any> = [];
-
-  if (Array.isArray(tracks)) {
-    traksList = tracks.map((track) => (
-      <PlaylistItem
-        key={track.id}
-        Title={track.name}
-        // Subtitle={track.Subtitle}
-        Author={track.author}
-        Album={track.album}
-        TrackTime={serializeTrackTime(track.duration_in_seconds)}
-      />
-    ));
-  }
-
+const Playlist = ({ tracks, isLoading }: Props) => {
   return (
     <div className={styles.playlistContent}>
       <div className={styles.playlistTitle}>
@@ -39,8 +24,8 @@ const Playlist = () => {
         </div>
       </div>
       <div className={styles.playlist}>
-        {isLoading && <PlaylistItemSkeleton items={10} />}
-        {traksList}
+        {isLoading && <PlaylistItemSkeleton items={20} />}
+        {Array.isArray(tracks) && tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
       </div>
     </div>
   );

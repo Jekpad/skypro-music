@@ -1,8 +1,9 @@
 import { getAllTracks } from "@/services/api";
+import { TrackType } from "@/types/tracks";
 import { useEffect, useState } from "react";
 
-const useAllTracks = (): [Array<any> | null, boolean, boolean] => {
-  const [tracks, setTracks] = useState<Array<any> | null>(null);
+const useAllTracks = (): [TrackType[], boolean, boolean] => {
+  const [tracks, setTracks] = useState<TrackType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 

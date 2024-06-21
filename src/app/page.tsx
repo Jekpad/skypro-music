@@ -11,15 +11,15 @@ import { SkeletonTheme } from "react-loading-skeleton";
 export default function Home() {
   return (
     <Wrapper>
-      <main className={styles.main}>
-        <Nav />
-        <SkeletonTheme baseColor="#202020" highlightColor="#444">
+      <SkeletonTheme baseColor="#202020" highlightColor="#444">
+        <main className={styles.main}>
+          <Nav />
           <Main />
-        </SkeletonTheme>
-        <Sidebar />
-      </main>
-      <Bar />
-      <Footer />
+          <Sidebar />
+        </main>
+        <Bar />
+        <Footer />
+      </SkeletonTheme>
     </Wrapper>
   );
 }

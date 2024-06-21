@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { useState } from "react";
 
 const Nav = () => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const menuListClass = classNames({
     [styles.menuList]: true,
