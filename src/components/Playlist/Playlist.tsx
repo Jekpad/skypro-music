@@ -2,8 +2,15 @@ import styles from "./Playlist.module.css";
 import mocData from "../../lib/mocData";
 import PlaylistItem from "./PlaylistItem/PlaylistItem";
 import classNames from "classnames";
+import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
+import { TrackType } from "@/types/tracks";
 
-const Playlist = () => {
+interface Props {
+  tracks: TrackType[];
+  isLoading: boolean;
+}
+
+const Playlist = ({ tracks, isLoading }: Props) => {
   return (
     <div className={styles.playlistContent}>
       <div className={styles.playlistTitle}>
@@ -17,16 +24,8 @@ const Playlist = () => {
         </div>
       </div>
       <div className={styles.playlist}>
-        {mocData.map((track, index) => (
-          <PlaylistItem
-            key={index}
-            Title={track.Title}
-            Subtitle={track.Subtitle}
-            Author={track.Author}
-            Album={track.Album}
-            TrackTime={track.TrackTime}
-          />
-        ))}
+        {isLoading && <PlaylistItemSkeleton items={20} />}
+        {Array.isArray(tracks) && tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
       </div>
     </div>
   );

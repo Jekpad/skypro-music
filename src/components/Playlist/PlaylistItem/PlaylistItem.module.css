@@ -59,6 +59,7 @@
 }
 
 .trackTitleLink {
+  display: flex;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -67,6 +68,7 @@
 }
 
 .trackTitleSpan {
+  min-width: 100px;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -111,6 +113,10 @@
   margin-right: 17px;
   fill: transparent;
   stroke: #696969;
+}
+
+.trackTime {
+  width: 80px;
 }
 
 .trackTimeText {
