@@ -1,5 +1,4 @@
 import styles from "./Playlist.module.css";
-import mocData from "../../lib/mocData";
 import PlaylistItem from "./PlaylistItem/PlaylistItem";
 import classNames from "classnames";
 import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
@@ -25,7 +24,8 @@ const Playlist = ({ tracks, isLoading }: Props) => {
       </div>
       <div className={styles.playlist}>
         {isLoading && <PlaylistItemSkeleton items={20} />}
-        {Array.isArray(tracks) && tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
+        {Array.isArray(tracks) &&
+          tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
       </div>
     </div>
   );

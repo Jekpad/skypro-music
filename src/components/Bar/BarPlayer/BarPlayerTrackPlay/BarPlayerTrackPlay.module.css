@@ -51,7 +51,7 @@
   grid-row: 1;
   grid-column: 2;
   grid-area: author;
-  min-width: 49px;
+  min-width: 120px;
 }
 
 .trackPlayAuthorLink {
@@ -67,7 +67,7 @@
   grid-row: 2;
   grid-column: 2;
   grid-area: album;
-  min-width: 49px;
+  min-width: 120px;
 }
 
 .trackPlayAlbumLink {
@@ -89,7 +89,7 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  margin-left: 26%;
+  margin-left: 40px;
 }
 
 .trackPlayLike,

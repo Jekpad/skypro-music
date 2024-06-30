@@ -7,17 +7,20 @@ import Bar from "@/components/Bar/Bar";
 import Nav from "@/components/Nav/Nav";
 import Main from "@/components/Main/Main";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { CurrentTrackContextProvider } from "@/contexts/CurrentTrackContext";
 
 export default function Home() {
   return (
     <Wrapper>
       <SkeletonTheme baseColor="#202020" highlightColor="#444">
-        <main className={styles.main}>
-          <Nav />
-          <Main />
-          <Sidebar />
-        </main>
-        <Bar />
+        <CurrentTrackContextProvider>
+          <main className={styles.main}>
+            <Nav />
+            <Main />
+            <Sidebar />
+          </main>
+          <Bar />
+        </CurrentTrackContextProvider>
         <Footer />
       </SkeletonTheme>
     </Wrapper>
