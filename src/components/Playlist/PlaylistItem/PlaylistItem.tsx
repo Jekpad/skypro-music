@@ -3,19 +3,32 @@
 import { TrackType } from "@/types/tracks";
 import styles from "./PlaylistItem.module.css";
 import { serializeTrackTime } from "@/helpers/serializeTrackTime";
+import { useCurrentTrack } from "@/contexts/CurrentTrackContext";
+import classNames from "classnames";
 
 type Props = {
   track: TrackType;
 };
 
 const PlaylistItem = ({ track }: Props) => {
+  const { currentTrack, setCurrentTrack } = useCurrentTrack();
+
   const { name, author, album, duration_in_seconds } = track;
 
+  const hadleSelectTrack = () => {
+    setCurrentTrack(track);
+  };
+
+  const trackTitleImageClass = classNames({
+    [styles.trackTitleImage]: true,
+    [styles.selected]: track === currentTrack,
+  });
+
   return (
-    <div className={styles.playlistItem}>
+    <div onClick={hadleSelectTrack} className={styles.playlistItem}>
       <div className={styles.track}>
         <div className={styles.trackTitle}>
-          <div className={styles.trackTitleImage}>
+          <div className={trackTitleImageClass}>
             <svg className={styles.trackTitleSvg}>
               <use xlinkHref="img/icon/sprite.svg#icon-note" />
             </svg>

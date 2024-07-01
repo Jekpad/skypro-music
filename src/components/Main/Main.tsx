@@ -8,7 +8,6 @@ import useAllTracks from "@/hooks/useAllTracks";
 
 const Main = () => {
   const [tracks, isLoading, isError] = useAllTracks();
-
   return (
     <div className={styles.centerblock}>
       <Search />

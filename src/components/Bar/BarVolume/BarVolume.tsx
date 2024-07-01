@@ -1,7 +1,13 @@
 import classNames from "classnames";
 import styles from "./BarVolume.module.css";
 
-const BarVolume = () => {
+type VolumeProps = {
+  value: number;
+  step: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const BarVolume = ({ value, step, onChange }: VolumeProps) => {
   return (
     <div className={styles.volume}>
       <div className={styles.volumeContent}>
@@ -11,7 +17,15 @@ const BarVolume = () => {
           </svg>
         </div>
         <div className={classNames(styles.volumeProgress, "_btn")}>
-          <input className={classNames(styles.volumeProgressLine, "_btn")} name="range" type="range" />
+          <input
+            className={classNames(styles.volumeProgressLine, "_btn")}
+            type="range"
+            min={0}
+            max={1}
+            value={value}
+            step={step}
+            onChange={onChange}
+          />
         </div>
       </div>
     </div>

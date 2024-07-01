@@ -4,7 +4,7 @@ export function serializeTrackTime(time: string | number): string {
 
   seconds = typeof time === "string" ? parseInt(time) : time;
   minutes = Math.floor(seconds / 60);
-  seconds = seconds % 60;
+  seconds = Math.floor(seconds % 60);
 
   return addLeadingZero(minutes) + ":" + addLeadingZero(seconds);
 }
