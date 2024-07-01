@@ -9,30 +9,46 @@ import { useRef, useEffect, useState, useCallback, use } from "react";
 
 const Bar = () => {
   const refAudio = useRef<HTMLAudioElement | null>(null);
-  const { currentTrack, setCurrentTrack } = useCurrentTrack();
+  const { currentTrack } = useCurrentTrack();
   const [volume, setVolume] = useState<number>(0.5);
-  const [isEnded, setIsEnded] = useState<boolean>(true);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isRepeat, setIsRepeat] = useState<boolean>(false);
+
+  const audio = refAudio?.current ?? null;
+
+  const togglePlay = () => {
+    if (!audio || !currentTrack) return;
+
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying((prev) => !prev);
+  };
+
+  const toggleRepeat = () => {
+    if (!audio) return;
+
+    if (isRepeat) {
+      audio.loop = false;
+    } else {
+      audio.loop = true;
+    }
+    setIsRepeat((prev) => !prev);
+  };
 
   const duration = refAudio.current?.duration || 0;
 
-  // const handleEnd = useCallback(() => {
-  //   setIsEnded(true);
-  //   setCurrentTrack(null);
-  // }, []);
-
   useEffect(() => {
+    if (!audio || !currentTrack) return;
+
     if (refAudio.current) {
-      refAudio.current.play();
+      audio.play();
+      setIsPlaying(true);
     }
-
-    // const audio = refAudio.current;
-    // audio?.addEventListener("ended", handleEnd);
-
-    // return () => {
-    //   audio?.removeEventListener("ended", handleEnd);
-    // };
-  }, [currentTrack]);
+  }, [audio, currentTrack]);
 
   useEffect(() => {
     if (!refAudio.current) return;
@@ -49,7 +65,15 @@ const Bar = () => {
       <div className={styles.barContent}>
         <BarPlayerProgress max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
         <div className={styles.barPlayerBlock}>
-          <BarPlayer track={currentTrack} refAudio={refAudio} />
+          <BarPlayer
+            track={currentTrack}
+            isPlaying={isPlaying}
+            togglePlay={togglePlay}
+            isRepeat={isRepeat}
+            toggleRepeat={toggleRepeat}
+            currentTime={currentTime}
+            duration={duration}
+          />
           <BarVolume
             value={volume}
             step={0.01}

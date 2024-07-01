@@ -1,14 +1,25 @@
+"use client";
+
 import stylesMain from "./BarPlayerTrackPlay.module.css";
-import stylesIcons from "../icons.module.css";
 import classNames from "classnames";
-import { TrackType } from "@/types/tracks";
+import Toast, { handleWarning } from "@/components/Toast/Toast";
+import { serializeTrackTime } from "@/helpers/serializeTrackTime";
 
 type TrackPlayProps = {
   name: string;
   author: string;
+  currentTime: number;
+  duration: number;
 };
 
-const BarPlayerTrackPlay = ({ name, author }: TrackPlayProps) => {
+const inWorking = () => {
+  handleWarning("В разработке");
+};
+
+const BarPlayerTrackPlay = ({ name, author, currentTime, duration }: TrackPlayProps) => {
+  const formatedTime = serializeTrackTime(currentTime);
+  const formatedDuration = serializeTrackTime(duration);
+
   return (
     <div className={stylesMain.trackPlay}>
       <div className={stylesMain.trackPlayContain}>
@@ -28,18 +39,22 @@ const BarPlayerTrackPlay = ({ name, author }: TrackPlayProps) => {
           </a>
         </div>
       </div>
+      <div className={stylesMain.trackPlayTime}>
+        {formatedTime} / {formatedDuration}
+      </div>
       <div className={stylesMain.trackPlayLikeDis}>
-        <div className={classNames(stylesMain.trackPlayLike, stylesIcons["_btn-icon"])}>
+        <div className={classNames(stylesMain.trackPlayLike)} onClick={inWorking}>
           <svg className={stylesMain.trackPlayLikeSvg}>
             <use xlinkHref="img/icon/sprite.svg#icon-like" />
           </svg>
         </div>
-        <div className={classNames(stylesMain.trackPlayDislike, stylesIcons["_btn-icon"])}>
+        <div className={classNames(stylesMain.trackPlayDislike)} onClick={inWorking}>
           <svg className={stylesMain.trackPlayDislikeSvg}>
             <use xlinkHref="img/icon/sprite.svg#icon-dislike" />
           </svg>
         </div>
       </div>
+      <Toast />
     </div>
   );
 };

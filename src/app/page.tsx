@@ -1,4 +1,3 @@
-import Image from "next/image";
 import styles from "./page.module.css";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import Wrapper from "@/components/Wrapper/Wrapper";

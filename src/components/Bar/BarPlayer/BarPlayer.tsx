@@ -6,14 +6,37 @@ import { TrackType } from "@/types/tracks";
 
 type BarPlayerProps = {
   track: TrackType | null;
-  refAudio?: React.RefObject<HTMLAudioElement>;
+  isPlaying: boolean;
+  togglePlay: () => void;
+  isRepeat: boolean;
+  toggleRepeat: () => void;
+  currentTime: number;
+  duration: number;
 };
 
-const BarPlayer = ({ track, refAudio }: BarPlayerProps) => {
+const BarPlayer = ({
+  track,
+  isPlaying,
+  togglePlay,
+  isRepeat,
+  toggleRepeat,
+  currentTime,
+  duration,
+}: BarPlayerProps) => {
   return (
     <div className={classNames(styles.barPlayer, "player")}>
-      <BarPlayerControls refAudio={refAudio} />
-      <BarPlayerTrackPlay name={track?.name || ""} author={track?.author || ""} />
+      <BarPlayerControls
+        isPlaying={isPlaying}
+        togglePlay={togglePlay}
+        isRepeat={isRepeat}
+        toggleRepeat={toggleRepeat}
+      />
+      <BarPlayerTrackPlay
+        name={track?.name || ""}
+        author={track?.author || ""}
+        currentTime={currentTime || 0}
+        duration={duration || 0}
+      />
     </div>
   );
 };

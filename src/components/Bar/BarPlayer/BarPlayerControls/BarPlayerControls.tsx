@@ -1,55 +1,40 @@
 "use client";
 import React from "react";
-import stylesMain from "./BarPlayerControls.module.css";
-import stylesIcons from "../icons.module.css";
+import styles from "./BarPlayerControls.module.css";
 import classNames from "classnames";
-import { useState } from "react";
+import Toast, { handleWarning } from "@/components/Toast/Toast";
+
 type PlayerControlsProps = {
-  refAudio?: React.RefObject<HTMLAudioElement>;
+  isPlaying: boolean;
+  togglePlay: () => void;
+  isRepeat: boolean;
+  toggleRepeat: () => void;
 };
 
-const BarPlayerControls = ({ refAudio }: PlayerControlsProps) => {
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isRepeat, setIsRepeat] = useState<boolean>(false);
+const BarPlayerControls = ({
+  isPlaying,
+  togglePlay,
+  isRepeat,
+  toggleRepeat,
+}: PlayerControlsProps) => {
+  const playerBtnRepeatClass = classNames({
+    [styles.playerBtnRepeat]: true,
+    [styles.active]: isRepeat,
+  });
 
-  const togglePlay = () => {
-    const audio = refAudio?.current ?? null;
-
-    if (!audio) return;
-
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
-    setIsPlaying((prev) => !prev);
-  };
-
-  const toggleRepeat = () => {
-    const audio = refAudio?.current ?? null;
-
-    if (!audio) return;
-
-    if (isRepeat) {
-      audio.loop = false;
-    } else {
-      audio.loop = true;
-    }
-    setIsPlaying((prev) => !prev);
+  const inWorking = () => {
+    handleWarning("В разработке");
   };
 
   return (
-    <div className={stylesMain.playerControls}>
-      <div className={classNames(stylesMain.playerBtnPrev, stylesIcons["_btn-icon"])}>
-        <svg className={stylesMain.playerBtnPrevSvg}>
+    <div className={styles.playerControls}>
+      <div className={classNames(styles.playerBtnPrev)} onClick={inWorking}>
+        <svg className={styles.playerBtnPrevSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-prev" />
         </svg>
       </div>
-      <div
-        className={classNames(stylesMain.playerBtnPlay, stylesIcons["_btn-icon"])}
-        onClick={togglePlay}
-      >
-        <svg className={stylesMain.playerBtnPlaySvg}>
+      <div className={classNames(styles.playerBtnPlay)} onClick={togglePlay}>
+        <svg className={styles.playerBtnPlaySvg}>
           {isPlaying ? (
             <use xlinkHref="img/icon/sprite.svg#icon-pause" />
           ) : (
@@ -57,24 +42,22 @@ const BarPlayerControls = ({ refAudio }: PlayerControlsProps) => {
           )}
         </svg>
       </div>
-      <div className={classNames(stylesMain.playerBtnNext, stylesIcons["_btn-icon"])}>
-        <svg className={stylesMain.playerBtnNextSvg}>
+      <div className={classNames(styles.playerBtnNext)} onClick={inWorking}>
+        <svg className={styles.playerBtnNextSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-next" />
         </svg>
       </div>
-      <div
-        className={classNames(stylesMain.playerBtnRepeat, stylesIcons["_btn-icon"])}
-        onClick={toggleRepeat}
-      >
-        <svg className={stylesMain.playerBtnRepeatSvg}>
+      <div className={playerBtnRepeatClass} onClick={toggleRepeat}>
+        <svg className={styles.playerBtnRepeatSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-repeat" />
         </svg>
       </div>
-      <div className={classNames(stylesMain.playerBtnShuffle, stylesIcons["_btn-icon"])}>
-        <svg className={stylesMain.playerBtnShuffleSvg}>
+      <div className={classNames(styles.playerBtnShuffle)} onClick={inWorking}>
+        <svg className={styles.playerBtnShuffleSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-shuffle" />
         </svg>
       </div>
+      <Toast />
     </div>
   );
 };
