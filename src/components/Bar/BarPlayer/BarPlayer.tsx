@@ -2,12 +2,41 @@ import classNames from "classnames";
 import styles from "./BarPlayer.module.css";
 import BarPlayerControls from "./BarPlayerControls/BarPlayerControls";
 import BarPlayerTrackPlay from "./BarPlayerTrackPlay/BarPlayerTrackPlay";
+import { TrackType } from "@/types/tracks";
 
-const BarPlayer = () => {
+type BarPlayerProps = {
+  track: TrackType | null;
+  isPlaying: boolean;
+  togglePlay: () => void;
+  isRepeat: boolean;
+  toggleRepeat: () => void;
+  currentTime: number;
+  duration: number;
+};
+
+const BarPlayer = ({
+  track,
+  isPlaying,
+  togglePlay,
+  isRepeat,
+  toggleRepeat,
+  currentTime,
+  duration,
+}: BarPlayerProps) => {
   return (
     <div className={classNames(styles.barPlayer, "player")}>
-      <BarPlayerControls />
-      <BarPlayerTrackPlay />
+      <BarPlayerControls
+        isPlaying={isPlaying}
+        togglePlay={togglePlay}
+        isRepeat={isRepeat}
+        toggleRepeat={toggleRepeat}
+      />
+      <BarPlayerTrackPlay
+        name={track?.name || ""}
+        author={track?.author || ""}
+        currentTime={currentTime || 0}
+        duration={duration || 0}
+      />
     </div>
   );
 };

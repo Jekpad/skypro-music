@@ -1,3 +1,30 @@
+@keyframes pulse-animation {
+  0% {
+    filter: brightness(1);
+    transform: scale(1);
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+  }
+
+  20% {
+    filter: brightness(1.1);
+  }
+
+  50% {
+    filter: brightness(1.5);
+    transform: scale(1.25);
+  }
+
+  80% {
+    filter: brightness(1.1);
+  }
+
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+  }
+}
+
 .playlistItem {
   width: 100%;
   display: block;
@@ -49,6 +76,17 @@
   -ms-flex-pack: center;
   justify-content: center;
   margin-right: 17px;
+  position: relative;
+}
+
+.trackTitleImage.selected::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  background: #b672ff;
+  position: absolute;
+  animation: pulse-animation 2s infinite ease-in-out;
 }
 
 .trackTitleSvg {
