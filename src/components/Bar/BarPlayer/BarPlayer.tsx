@@ -5,7 +5,7 @@ import BarPlayerTrackPlay from "./BarPlayerTrackPlay/BarPlayerTrackPlay";
 import { TrackType } from "@/types/tracks";
 
 type BarPlayerProps = {
-  track: TrackType | null;
+  track: TrackType | undefined;
   isPlaying: boolean;
   togglePlay: () => void;
   isRepeat: boolean;

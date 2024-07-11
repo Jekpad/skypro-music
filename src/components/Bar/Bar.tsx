@@ -1,18 +1,22 @@
 "use client";
 
-import { useCurrentTrack } from "@/contexts/CurrentTrackContext";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import styles from "./Bar.module.css";
 import BarPlayer from "./BarPlayer/BarPlayer";
 import BarPlayerProgress from "./BarPlayerProgress/BarPlayerProgress";
 import BarVolume from "./BarVolume/BarVolume";
-import { useRef, useEffect, useState, useCallback, use } from "react";
+import { useRef, useEffect, useState } from "react";
+import { setPlaying } from "@/store/features/trackSlice";
 
 const Bar = () => {
   const refAudio = useRef<HTMLAudioElement | null>(null);
-  const { currentTrack } = useCurrentTrack();
+  const dispatch = useAppDispatch();
+
+  const currentTrack = useAppSelector((state) => state.track.currentTrackState);
+  const isPlaying = useAppSelector((state) => state.track.isPlayingState);
   const [volume, setVolume] = useState<number>(0.5);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  // const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isRepeat, setIsRepeat] = useState<boolean>(false);
 
   const audio = refAudio?.current ?? null;
@@ -25,7 +29,8 @@ const Bar = () => {
     } else {
       audio.play();
     }
-    setIsPlaying((prev) => !prev);
+
+    dispatch(setPlaying(!isPlaying));
   };
 
   const toggleRepeat = () => {
@@ -46,9 +51,9 @@ const Bar = () => {
 
     if (refAudio.current) {
       audio.play();
-      setIsPlaying(true);
+      dispatch(setPlaying(true));
     }
-  }, [audio, currentTrack]);
+  }, [audio, currentTrack, dispatch]);
 
   useEffect(() => {
     if (!refAudio.current) return;

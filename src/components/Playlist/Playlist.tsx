@@ -2,14 +2,11 @@ import styles from "./Playlist.module.css";
 import PlaylistItem from "./PlaylistItem/PlaylistItem";
 import classNames from "classnames";
 import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
-import { TrackType } from "@/types/tracks";
+import { useAppSelector } from "@/store/store";
 
-interface Props {
-  tracks: TrackType[];
-  isLoading: boolean;
-}
+const Playlist = () => {
+  const tracks = useAppSelector((state) => state.track.currentPlaylistState);
 
-const Playlist = ({ tracks, isLoading }: Props) => {
   return (
     <div className={styles.playlistContent}>
       <div className={styles.playlistTitle}>
@@ -23,7 +20,7 @@ const Playlist = ({ tracks, isLoading }: Props) => {
         </div>
       </div>
       <div className={styles.playlist}>
-        {isLoading && <PlaylistItemSkeleton items={20} />}
+        {tracks.length == 0 && <PlaylistItemSkeleton items={20} />}
         {Array.isArray(tracks) &&
           tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
       </div>

@@ -3,6 +3,8 @@ import React from "react";
 import styles from "./BarPlayerControls.module.css";
 import classNames from "classnames";
 import Toast, { handleWarning } from "@/components/Toast/Toast";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setShufflePlaylist, setTrack } from "@/store/features/trackSlice";
 
 type PlayerControlsProps = {
   isPlaying: boolean;
@@ -17,6 +19,10 @@ const BarPlayerControls = ({
   isRepeat,
   toggleRepeat,
 }: PlayerControlsProps) => {
+  const dispatch = useAppDispatch();
+  const isShuffle = useAppSelector((state) => state.track.isShuffleState);
+  console.log(isShuffle);
+
   const playerBtnRepeatClass = classNames({
     [styles.playerBtnRepeat]: true,
     [styles.active]: isRepeat,
@@ -52,7 +58,10 @@ const BarPlayerControls = ({
           <use xlinkHref="img/icon/sprite.svg#icon-repeat" />
         </svg>
       </div>
-      <div className={classNames(styles.playerBtnShuffle)} onClick={inWorking}>
+      <div
+        className={classNames({ [styles.playerBtnShuffle]: true, [styles.active]: isShuffle })}
+        onClick={() => dispatch(setShufflePlaylist(!isShuffle))}
+      >
         <svg className={styles.playerBtnShuffleSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-shuffle" />
         </svg>
