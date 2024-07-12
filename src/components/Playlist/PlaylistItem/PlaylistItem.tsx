@@ -6,6 +6,7 @@ import { TrackType } from "@/types/tracks";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { setTrack } from "@/store/features/trackSlice";
 import { serializeTrackTime } from "@/helpers/serializeTrackTime";
+import useLikeTrack from "@/hooks/useLikeTrack";
 
 type Props = {
   track: TrackType;
@@ -14,6 +15,7 @@ type Props = {
 const PlaylistItem = ({ track }: Props) => {
   const currentTrack = useAppSelector((state) => state.track.currentTrackState);
   const dispatch = useAppDispatch();
+  const { isLiked, handleLike } = useLikeTrack(track.id);
 
   const { name, author, album, duration_in_seconds } = track;
 
@@ -44,10 +46,12 @@ const PlaylistItem = ({ track }: Props) => {
         <div className={styles.trackAlbum}>
           <span className={styles.trackAlbumLink}>{album}</span>
         </div>
-        <div className={styles.trackTime}>
-          <svg className={styles.trackTimeSvg}>
-            <use xlinkHref="img/icon/sprite.svg#icon-like" />
-          </svg>
+        <div className={styles.trackTime} onClick={handleLike}>
+          {isLiked && (
+            <svg className={styles.trackTimeSvg}>
+              <use xlinkHref="img/icon/sprite.svg#icon-like" />
+            </svg>
+          )}
           <span className={styles.trackTimeText}>{serializeTrackTime(duration_in_seconds)}</span>
         </div>
       </div>
