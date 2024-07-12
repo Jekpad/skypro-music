@@ -1,0 +1,27 @@
+meta {
+  name: Авторизоваться
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUser}}/login/
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "email": "gleb@fokin.ru",
+    "password": "gleb@fokin.ru"
+  }
+}
+
+body:multipart-form {
+  login: admin
+  password: password
+}
