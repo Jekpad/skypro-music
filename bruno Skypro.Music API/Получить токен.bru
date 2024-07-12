@@ -1,0 +1,27 @@
+meta {
+  name: Получить токен
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUser}}/token/
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/json
+}
+
+body:json {
+  {
+    "email": "gleb@fokin.ru",
+    "password": "gleb@fokin.ru"
+  }
+}
+
+body:multipart-form {
+  login: admin
+  password: password
+}
