@@ -4,7 +4,12 @@ import styles from "./BarPlayerControls.module.css";
 import classNames from "classnames";
 import Toast, { handleWarning } from "@/components/Toast/Toast";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setShufflePlaylist, setTrack } from "@/store/features/trackSlice";
+import {
+  setNextTrack,
+  setPreviousTrack,
+  setShufflePlaylist,
+  setTrack,
+} from "@/store/features/trackSlice";
 
 type PlayerControlsProps = {
   isPlaying: boolean;
@@ -21,7 +26,6 @@ const BarPlayerControls = ({
 }: PlayerControlsProps) => {
   const dispatch = useAppDispatch();
   const isShuffle = useAppSelector((state) => state.track.isShuffleState);
-  console.log(isShuffle);
 
   const playerBtnRepeatClass = classNames({
     [styles.playerBtnRepeat]: true,
@@ -34,7 +38,10 @@ const BarPlayerControls = ({
 
   return (
     <div className={styles.playerControls}>
-      <div className={classNames(styles.playerBtnPrev)} onClick={inWorking}>
+      <div
+        className={classNames(styles.playerBtnPrev)}
+        onClick={() => dispatch(setPreviousTrack())}
+      >
         <svg className={styles.playerBtnPrevSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-prev" />
         </svg>
@@ -48,7 +55,7 @@ const BarPlayerControls = ({
           )}
         </svg>
       </div>
-      <div className={classNames(styles.playerBtnNext)} onClick={inWorking}>
+      <div className={classNames(styles.playerBtnNext)} onClick={() => dispatch(setNextTrack())}>
         <svg className={styles.playerBtnNextSvg}>
           <use xlinkHref="img/icon/sprite.svg#icon-next" />
         </svg>
