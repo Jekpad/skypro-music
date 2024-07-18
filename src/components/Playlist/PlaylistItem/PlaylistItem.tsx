@@ -13,6 +13,7 @@ type Props = {
 
 const PlaylistItem = ({ track }: Props) => {
   const currentTrack = useAppSelector((state) => state.track.currentTrackState);
+  const isPlaying = useAppSelector((state) => state.track.isPlayingState);
   const dispatch = useAppDispatch();
 
   const { name, author, album, duration_in_seconds } = track;
@@ -20,6 +21,7 @@ const PlaylistItem = ({ track }: Props) => {
   const trackTitleImageClass = classNames({
     [styles.trackTitleImage]: true,
     [styles.selected]: track === currentTrack,
+    [styles.playing]: isPlaying,
   });
 
   return (

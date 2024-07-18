@@ -2,14 +2,8 @@
 import React from "react";
 import styles from "./BarPlayerControls.module.css";
 import classNames from "classnames";
-import Toast, { handleWarning } from "@/components/Toast/Toast";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import {
-  setNextTrack,
-  setPreviousTrack,
-  setShufflePlaylist,
-  setTrack,
-} from "@/store/features/trackSlice";
+import { setNextTrack, setPreviousTrack, setShufflePlaylist } from "@/store/features/trackSlice";
 
 type PlayerControlsProps = {
   isPlaying: boolean;
@@ -31,10 +25,6 @@ const BarPlayerControls = ({
     [styles.playerBtnRepeat]: true,
     [styles.active]: isRepeat,
   });
-
-  const inWorking = () => {
-    handleWarning("В разработке");
-  };
 
   return (
     <div className={styles.playerControls}>
@@ -73,7 +63,6 @@ const BarPlayerControls = ({
           <use xlinkHref="img/icon/sprite.svg#icon-shuffle" />
         </svg>
       </div>
-      <Toast />
     </div>
   );
 };
