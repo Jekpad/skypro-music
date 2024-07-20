@@ -3,9 +3,18 @@
   -webkit-box-flex: 3;
   -ms-flex-positive: 3;
   flex-grow: 3;
-  padding: 20px 40px 75px 111px;
+  padding: 0px 40px 75px 111px;
   overflow-y: auto;
   height: 100vh;
+}
+
+.stickyContent {
+  padding-top: 20px;
+  padding-bottom: 50px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--background);
 }
 
 .centerblock::-webkit-scrollbar {

@@ -1,9 +1,9 @@
 "use client";
-import styles from "./Filter.module.css";
 import FilterItem from "./FilterItem/FilterItem";
 import { getUniqueValues } from "@/helpers/getUniqueValues";
 import { useState } from "react";
 import { useAppSelector } from "@/store/store";
+import styles from "./Filter.module.css";
 
 const DATES_FILTER: string[] = ["По умолчанию", "Сначала новые", "Сначала старые"];
 

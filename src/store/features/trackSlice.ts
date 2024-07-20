@@ -33,7 +33,7 @@ const trackSlice = createSlice({
       const currentTrackIndex = state.currentPlaylistState.findIndex(
         (track) => track.id === state.currentTrackState?.id
       );
-      if (currentTrackIndex === -1 || currentTrackIndex - 1 <= 0) return;
+      if (currentTrackIndex === -1 || currentTrackIndex <= 0) return;
       state.currentTrackState = state.currentPlaylistState[currentTrackIndex - 1];
       state.isPlayingState = true;
     },
