@@ -1,20 +1,17 @@
-import classNames from "classnames";
-import styles from "./Filter.module.css";
+"use client";
 import FilterItem from "./FilterItem/FilterItem";
-import { TrackType } from "@/types/tracks";
 import { getUniqueValues } from "@/helpers/getUniqueValues";
 import { useState } from "react";
+import { useAppSelector } from "@/store/store";
+import styles from "./Filter.module.css";
 
 const DATES_FILTER: string[] = ["По умолчанию", "Сначала новые", "Сначала старые"];
 
-type Props = {
-  tracks: TrackType[];
-};
+const Filter = () => {
+  const tracks = useAppSelector((state) => state.track.currentPlaylistState);
 
-const Filter = ({ tracks }: Props) => {
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const authorList = getUniqueValues(tracks, "author");
-  const releaseDateList = getUniqueValues(tracks, "release_date");
   const genreList = getUniqueValues(tracks, "genre");
 
   const handleFilter = (newFilter: string) => {

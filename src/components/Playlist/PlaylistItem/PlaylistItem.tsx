@@ -1,31 +1,31 @@
 "use client";
 
-import { TrackType } from "@/types/tracks";
-import styles from "./PlaylistItem.module.css";
-import { serializeTrackTime } from "@/helpers/serializeTrackTime";
-import { useCurrentTrack } from "@/contexts/CurrentTrackContext";
 import classNames from "classnames";
+import styles from "./PlaylistItem.module.css";
+import { TrackType } from "@/types/tracks";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { setTrack } from "@/store/features/trackSlice";
+import { serializeTrackTime } from "@/helpers/serializeTrackTime";
 
 type Props = {
   track: TrackType;
 };
 
 const PlaylistItem = ({ track }: Props) => {
-  const { currentTrack, setCurrentTrack } = useCurrentTrack();
+  const currentTrack = useAppSelector((state) => state.track.currentTrackState);
+  const isPlaying = useAppSelector((state) => state.track.isPlayingState);
+  const dispatch = useAppDispatch();
 
   const { name, author, album, duration_in_seconds } = track;
-
-  const hadleSelectTrack = () => {
-    setCurrentTrack(track);
-  };
 
   const trackTitleImageClass = classNames({
     [styles.trackTitleImage]: true,
     [styles.selected]: track === currentTrack,
+    [styles.playing]: isPlaying,
   });
 
   return (
-    <div onClick={hadleSelectTrack} className={styles.playlistItem}>
+    <div onClick={() => dispatch(setTrack(track))} className={styles.playlistItem}>
       <div className={styles.track}>
         <div className={styles.trackTitle}>
           <div className={trackTitleImageClass}>

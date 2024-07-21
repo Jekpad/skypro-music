@@ -1,21 +1,25 @@
 "use client";
 
-import { useCurrentTrack } from "@/contexts/CurrentTrackContext";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import styles from "./Bar.module.css";
 import BarPlayer from "./BarPlayer/BarPlayer";
 import BarPlayerProgress from "./BarPlayerProgress/BarPlayerProgress";
 import BarVolume from "./BarVolume/BarVolume";
-import { useRef, useEffect, useState, useCallback, use } from "react";
+import { useRef, useEffect, useState } from "react";
+import { setNextTrack, setPlaying } from "@/store/features/trackSlice";
 
 const Bar = () => {
   const refAudio = useRef<HTMLAudioElement | null>(null);
-  const { currentTrack } = useCurrentTrack();
+  const dispatch = useAppDispatch();
+
+  const currentTrack = useAppSelector((state) => state.track.currentTrackState);
+  const isPlaying = useAppSelector((state) => state.track.isPlayingState);
   const [volume, setVolume] = useState<number>(0.5);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isRepeat, setIsRepeat] = useState<boolean>(false);
 
   const audio = refAudio?.current ?? null;
+  const duration = refAudio.current?.duration || 0;
 
   const togglePlay = () => {
     if (!audio || !currentTrack) return;
@@ -25,7 +29,8 @@ const Bar = () => {
     } else {
       audio.play();
     }
-    setIsPlaying((prev) => !prev);
+
+    dispatch(setPlaying(!isPlaying));
   };
 
   const toggleRepeat = () => {
@@ -39,21 +44,23 @@ const Bar = () => {
     setIsRepeat((prev) => !prev);
   };
 
-  const duration = refAudio.current?.duration || 0;
-
   useEffect(() => {
     if (!audio || !currentTrack) return;
 
     if (refAudio.current) {
       audio.play();
-      setIsPlaying(true);
+      dispatch(setPlaying(true));
     }
-  }, [audio, currentTrack]);
+  }, [audio, currentTrack, dispatch]);
 
   useEffect(() => {
     if (!refAudio.current) return;
     refAudio.current.volume = volume;
   }, [volume]);
+
+  useEffect(() => {
+    if (audio?.ended) dispatch(setNextTrack());
+  }, [currentTime, audio, dispatch]);
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!refAudio.current) return;
