@@ -1,14 +1,17 @@
 import Search from "../Search/Search";
-import styles from "./Main.module.css";
 import Filter from "../Filter/Filter";
 import Playlist from "../Playlist/Playlist";
+import styles from "./Main.module.css";
 
 const Main = () => {
   return (
     <div className={styles.centerblock}>
-      <Search />
-      <h2 className={styles.centerblockH2}>Треки</h2>
-      <Filter />
+      <div className={styles.stickyContent}>
+        <Search />
+        <h2 className={styles.centerblockH2}>Треки</h2>
+        <Filter />
+      </div>
+
       <Playlist />
     </div>
   );
