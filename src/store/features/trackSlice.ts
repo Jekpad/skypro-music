@@ -2,15 +2,6 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TrackType } from "@/types/tracks";
 import { fetchFavoriteTracks } from "@/services/api";
 
-export const getFavoriteTrack = createAsyncThunk(
-  "playlist/getFavoriteTracks",
-  // указать, что объект с 2 полями
-  async (tokens: any) => {
-    const favoriteTracks = await fetchFavoriteTracks(tokens);
-    return favoriteTracks;
-  }
-);
-
 type TrackStateType = {
   initialPlaylistState: TrackType[];
   currentPlaylistState: TrackType[];
@@ -19,6 +10,15 @@ type TrackStateType = {
   isPlayingState: boolean;
   isShuffleState: boolean;
 };
+
+export const getFavoriteTrack = createAsyncThunk(
+  "playlist/getFavoriteTracks",
+  // указать, что объект с 2 полями
+  async (tokens: any) => {
+    const favoriteTracks = await fetchFavoriteTracks(tokens);
+    return favoriteTracks;
+  }
+);
 
 const initialState: TrackStateType = {
   initialPlaylistState: [],
