@@ -7,29 +7,56 @@ import Routes from "../Routes";
 import styles from "./page.module.css";
 import classNames from "classnames";
 import { useState } from "react";
-import { Elsie_Swash_Caps } from "next/font/google";
 import { registration } from "@/services/api";
+import Toast, { handleError, handleSuccess } from "@/components/Toast/Toast";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
   const signup = async () => {
+    let clearUsername = username.trim();
+    let clearEmail = email.trim();
+
+    if (clearUsername.length < 3) {
+      return handleError("Имя пользователя должно быть не менее 3 символов");
+    }
+
+    if (clearEmail.length < 3) {
+      return handleError("Почта должна быть не менее 3 символов");
+    }
+
+    if (password.length < 6) {
+      return handleError("Пароль должен быть не менее 6 символов");
+    }
+
+    if (password !== passwordRepeat) {
+      return handleError("Пароли не совпадают");
+    }
+
     try {
       const result = await registration({
-        username: username,
-        email: email,
+        username: clearUsername,
+        email: clearEmail,
         password: password,
       });
 
-      console.log(result);
+      if (result.success) {
+        handleSuccess("Вы успешно зарегистрировались");
+        router.push(Routes.SIGNIN);
+      } else {
+        throw new Error("Во время создания пользователя произошла ошибка!");
+      }
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error.message);
+        handleError(error.message);
       } else {
-        console.log("Непредвиденная ошибка");
+        handleError("Непредвиденная ошибка");
       }
     }
   };
@@ -84,6 +111,7 @@ export default function Signup() {
           </div>
         </div>
       </div>
+      <Toast />
     </Wrapper>
   );
 }

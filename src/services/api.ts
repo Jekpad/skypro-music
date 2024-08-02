@@ -26,17 +26,13 @@ export const registration = async ({
     }),
   });
 
-  if (response.ok) {
-    const data = await response.json();
-    return data;
-  }
-
-  if (response.status === 403) {
+  if (!response.ok) {
     const data = await response.json();
     throw new Error(data.message);
   }
 
-  throw new Error(response.statusText);
+  const data = await response.json();
+  return data;
 };
 
 export const getAllTracks = async () => {

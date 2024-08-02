@@ -3,6 +3,20 @@ import React, { useEffect } from "react";
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const throwSuccess = (message: string) => {
+  toast.success(message, {
+    position: "bottom-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Slide,
+  });
+};
+
 const throwWarning = (message: string) => {
   toast.warn(message, {
     position: "bottom-right",
@@ -29,6 +43,10 @@ const throwError = (message: string) => {
     theme: "dark",
     transition: Slide,
   });
+};
+
+export const handleSuccess = (message: string) => {
+  throwSuccess(message);
 };
 
 export const handleWarning = (message: string) => {

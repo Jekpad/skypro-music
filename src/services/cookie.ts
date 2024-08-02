@@ -8,6 +8,8 @@ interface Options {
 }
 
 export function getCookie(name: string): string | undefined {
+  if (typeof document === "undefined") return undefined;
+
   let matches = document.cookie.match(
     new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)")
   );
