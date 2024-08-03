@@ -35,6 +35,48 @@ export const registration = async ({
   return data;
 };
 
+export const login = async ({ email, password }: { email: string; password: string }) => {
+  const response = await fetch(`${BASE_USER_URL}/login`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export const getJWTokens = async ({ email, password }: { email: string; password: string }) => {
+  const response = await fetch(`${BASE_USER_URL}/token`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export const getAllTracks = async () => {
   const response = await fetch(`${BASE_CATALOG_URL}/track/all/`);
   if (!response.ok) {

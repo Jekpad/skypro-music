@@ -7,12 +7,21 @@ import { useState } from "react";
 import Link from "next/link";
 import Routes from "@/app/Routes";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setAuthState } from "@/store/features/authSlice";
+import { useRouter } from "next/navigation";
+import { setUserLogout } from "@/store/features/authSlice";
 
 const Nav = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
-  const [isVisible, setIsVisible] = useState<boolean>(true);
+
   const isAuth = useAppSelector((state) => state.auth.isAuth);
+
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+
+  const handleUserAuth = async () => {
+    if (isAuth) await dispatch(setUserLogout());
+    else router.push(Routes.SIGNIN);
+  };
 
   const menuListClass = classNames({
     [styles.menuList]: true,
@@ -53,13 +62,7 @@ const Nav = () => {
             </a>
           </li>
           <li className={styles.menuItem}>
-            {isAuth ? (
-              <a onClick={() => dispatch(setAuthState(false))}>Выйти</a>
-            ) : (
-              <Link className={styles.menuLink} href={Routes.SIGNIN}>
-                Войти
-              </Link>
-            )}
+            <a onClick={handleUserAuth}>{isAuth ? "Выйти" : "Войти"}</a>
           </li>
         </ul>
       </div>

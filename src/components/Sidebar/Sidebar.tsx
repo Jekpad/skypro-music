@@ -1,22 +1,31 @@
 import Image from "next/image";
 import styles from "./Sidebar.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import Link from "next/link";
 import Routes from "@/app/Routes";
+import { setUserLogout } from "@/store/features/authSlice";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const username = useAppSelector((state) => state.auth.username);
+
+  const handleUserAuth = async () => {
+    if (isAuth) await dispatch(setUserLogout());
+    else router.push(Routes.SIGNIN);
+  };
 
   return (
     <div className={styles.mainSidebar}>
       <div className={styles.sidebarPersonal}>
-        {isAuth && <p className={styles.sidebarPersonalName}>Sergey.Ivanov</p>}
-        <Link href={isAuth ? "#" : Routes.SIGNIN} className={styles.sidebarIcon}>
+        <p className={styles.sidebarPersonalName}>{username}</p>
+        <div className={styles.sidebarIcon} onClick={handleUserAuth}>
           <svg>
             <use xlinkHref="img/icon/sprite.svg#icon-logout" />
           </svg>
-        </Link>
+        </div>
       </div>
       <div className={styles.sidebarBlock}>
         <div className={styles.sidebarList}>

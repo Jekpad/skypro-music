@@ -56,7 +56,7 @@ export default function Signup() {
       if (error instanceof Error) {
         handleError(error.message);
       } else {
-        handleError("Непредвиденная ошибка");
+        handleError("Произошла непредвиденная ошибка");
       }
     }
   };
