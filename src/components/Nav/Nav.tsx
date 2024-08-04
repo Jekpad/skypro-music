@@ -4,7 +4,6 @@ import Image from "next/image";
 import styles from "./Nav.module.css";
 import classNames from "classnames";
 import { useState } from "react";
-import Link from "next/link";
 import Routes from "@/app/Routes";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
@@ -14,7 +13,7 @@ const Nav = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const isAuth = useAppSelector((state) => state?.auth?.isAuth ?? false);
 
   const [isVisible, setIsVisible] = useState<boolean>(true);
 

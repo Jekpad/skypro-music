@@ -1,7 +1,9 @@
+"use client";
+
 import { getJWTokens, login } from "@/services/api";
-import { deleteCookie, getCookie, setCookie } from "@/services/cookie";
+import { deleteAuthCookie, setAuthCookie } from "@/services/cookie";
+import { AuthType } from "@/types/auth";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { log } from "console";
 
 type AuthStateType = {
   isAuth: boolean;
@@ -45,28 +47,19 @@ export const setUserLogout = createAsyncThunk("auth/setUserLogout", async (_, { 
 });
 
 const initialState: AuthStateType = {
-  isAuth: !!getCookie("accessToken") && !!getCookie("refreshToken"),
-  accessToken: getCookie("accessToken"),
-  refreshToken: getCookie("refreshToken"),
-  username: getCookie("username"),
-  email: getCookie("email"),
-  id: getCookie("id"),
+  isAuth: false,
+  accessToken: undefined,
+  refreshToken: undefined,
+  username: undefined,
+  email: undefined,
+  id: undefined,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth: (
-      state,
-      action: PayloadAction<{
-        id: string;
-        email: string;
-        username: string;
-        accessToken: string;
-        refreshToken: string;
-      }>
-    ) => {
+    setAuth: (state, action: PayloadAction<AuthType>) => {
       state.isAuth = true;
       state.id = action.payload.id;
       state.username = action.payload.username;
@@ -74,21 +67,16 @@ const authSlice = createSlice({
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
 
-      setCookie("username", action.payload.username, {
-        [`max-age`]: 12 * 3600,
-      });
-      setCookie("id", action.payload.id.toString(), {
-        [`max-age`]: 12 * 3600,
-      });
-      setCookie("email", action.payload.email, {
-        [`max-age`]: 12 * 3600,
-      });
-      setCookie("accessToken", action.payload.accessToken, {
-        [`max-age`]: 12 * 3600,
-      });
-      setCookie("refreshToken", action.payload.refreshToken, {
-        [`max-age`]: 12 * 3600,
-      });
+      setAuthCookie(
+        {
+          id: action.payload.id,
+          username: action.payload.username,
+          email: action.payload.email,
+          accessToken: action.payload.accessToken,
+          refreshToken: action.payload.refreshToken,
+        },
+        { maxAge: 12 * 3600 }
+      );
     },
     unsetAuth: (state) => {
       state.isAuth = false;
@@ -98,11 +86,7 @@ const authSlice = createSlice({
       state.accessToken = undefined;
       state.refreshToken = undefined;
 
-      deleteCookie("id");
-      deleteCookie("username");
-      deleteCookie("email");
-      deleteCookie("accessToken");
-      deleteCookie("refreshToken");
+      deleteAuthCookie();
     },
   },
   extraReducers(builder) {
@@ -112,5 +96,6 @@ const authSlice = createSlice({
   },
 });
 
-const { setAuth, unsetAuth } = authSlice.actions;
+const { unsetAuth } = authSlice.actions;
+export const { setAuth } = authSlice.actions;
 export const authReducer = authSlice.reducer;

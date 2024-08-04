@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import styles from "./BarPlayerControls.module.css";
 import classNames from "classnames";

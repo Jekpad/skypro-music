@@ -1,3 +1,5 @@
+"use client";
+
 import { dislikeTrack, likeTrack } from "@/services/api";
 import { setDislikeTrack, setLikeTrack } from "@/store/features/trackSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";

@@ -20,9 +20,14 @@ export default function Home() {
     const fetchAllTracks = async () => {
       try {
         const data = await getAllTracks();
-        dispatch(setInitialPlaylist(data));
+        const tracks = data.map((track: { _id: string; [key: string]: any }) => {
+          const { _id, ...rest } = track;
+          return { id: _id, ...rest };
+        });
+        dispatch(setInitialPlaylist(tracks));
       } catch (err) {
-      } finally {
+        console.log("Произошла ошибка при получении треков");
+        dispatch(setInitialPlaylist([]));
       }
     };
 

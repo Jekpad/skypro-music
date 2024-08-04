@@ -1,3 +1,5 @@
+"use client";
+
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TrackType } from "@/types/tracks";
 import { fetchFavoriteTracks } from "@/services/api";

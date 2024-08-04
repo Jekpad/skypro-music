@@ -1,3 +1,5 @@
+"use client";
+
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector, useStore } from "react-redux";
 // Слайсы

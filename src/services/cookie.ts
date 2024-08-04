@@ -1,48 +1,34 @@
-interface Options {
-  path?: string;
-  expires?: Date | number | string;
-  [`max-age`]?: number;
-  domain?: string;
-  secure?: boolean;
-  sameSite?: "Strict" | "Lax" | "None";
-}
+import { AuthType } from "@/types/auth";
+import { setCookie, deleteCookie, getCookie } from "cookies-next";
+import { OptionsType } from "cookies-next/lib/types";
 
-export function getCookie(name: string): string | undefined {
-  if (typeof document === "undefined") return undefined;
+const getAuthCookie = (): AuthType | undefined => {
+  const id = getCookie("id");
+  const username = getCookie("username");
+  const email = getCookie("email");
+  const accessToken = getCookie("accessToken");
+  const refreshToken = getCookie("refreshToken");
 
-  let matches = document.cookie.match(
-    new RegExp("(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)")
-  );
-  return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-export function setCookie(name: string, value: string, options: Options): void {
-  options = {
-    path: "/",
-    ...options,
-  };
-
-  if (options.expires instanceof Date) {
-    options.expires = options.expires.toUTCString();
+  if (id && username && email && accessToken && refreshToken) {
+    return { id, username, email, accessToken, refreshToken };
   }
+  return undefined;
+};
 
-  let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+const setAuthCookie = (auth: AuthType, options?: OptionsType): void => {
+  setCookie("id", auth.id, options);
+  setCookie("username", auth.username, options);
+  setCookie("email", auth.email, options);
+  setCookie("accessToken", auth.accessToken, options);
+  setCookie("refreshToken", auth.refreshToken, options);
+};
 
-  for (let optionKey in options) {
-    if (!options.hasOwnProperty(optionKey)) continue;
+const deleteAuthCookie = (): void => {
+  deleteCookie("id");
+  deleteCookie("username");
+  deleteCookie("email");
+  deleteCookie("accessToken");
+  deleteCookie("refreshToken");
+};
 
-    updatedCookie += "; " + optionKey;
-    let optionValue = options[optionKey as keyof Options];
-    if (optionValue !== true) {
-      updatedCookie += "=" + optionValue;
-    }
-  }
-
-  document.cookie = updatedCookie;
-}
-
-export function deleteCookie(name: string): void {
-  setCookie(name, "", {
-    expires: -1,
-  });
-}
+export { getAuthCookie, setAuthCookie, deleteAuthCookie };
