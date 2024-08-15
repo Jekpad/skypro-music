@@ -9,13 +9,14 @@ const useLikeTrack = (trackID: number) => {
   const dispatch = useAppDispatch();
 
   const tokens = {
-    access: "",
-    refresh: "",
+    access: useAppSelector((state) => state.auth.accessToken),
+    refresh: useAppSelector((state) => state.auth.refreshToken),
   };
   const likedTraks = useAppSelector((state) => state.track.likedPlaylistState);
-  //   Получаем состояние лайка из избранных треков
+
+  // Получаем состояние лайка из избранных треков
   // или получать в качестве пропса
-  const isLiked = !!likedTraks.find((track) => track.id === trackID);
+  const isLiked = !!likedTraks ? likedTraks.find((track) => track.id === trackID) : false;
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();

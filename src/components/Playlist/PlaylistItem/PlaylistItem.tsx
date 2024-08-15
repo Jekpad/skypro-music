@@ -49,11 +49,13 @@ const PlaylistItem = ({ track }: Props) => {
           <span className={styles.trackAlbumLink}>{album}</span>
         </div>
         <div className={styles.trackTime} onClick={handleLike}>
-          {isLiked && (
-            <svg className={styles.trackTimeSvg}>
+          <svg className={styles.trackTimeSvg}>
+            {isLiked ? (
+              <use xlinkHref="img/icon/sprite.svg#icon-like-submited" />
+            ) : (
               <use xlinkHref="img/icon/sprite.svg#icon-like" />
-            </svg>
-          )}
+            )}
+          </svg>
           <span className={styles.trackTimeText}>{serializeTrackTime(duration_in_seconds)}</span>
         </div>
       </div>

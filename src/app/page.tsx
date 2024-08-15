@@ -9,30 +9,26 @@ import Nav from "@/components/Nav/Nav";
 import Main from "@/components/Main/Main";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { setInitialPlaylist } from "@/store/features/trackSlice";
+import { getFavoriteTrack, getInitialPlaylist } from "@/store/features/trackSlice";
 import { useEffect } from "react";
-import { getAllTracks } from "@/services/api";
 
 export default function Home() {
   const dispatch = useAppDispatch();
 
+  const accessToken = useAppSelector((state) => state.auth.accessToken);
+  const refreshToken = useAppSelector((state) => state.auth.refreshToken);
+
   useEffect(() => {
-    const fetchAllTracks = async () => {
-      try {
-        const data = await getAllTracks();
-        const tracks = data.map((track: { _id: string; [key: string]: any }) => {
-          const { _id, ...rest } = track;
-          return { id: _id, ...rest };
-        });
-        dispatch(setInitialPlaylist(tracks));
-      } catch (err) {
-        console.log("Произошла ошибка при получении треков");
-        dispatch(setInitialPlaylist([]));
+    const getAllTracks = async () => {
+      await dispatch(getInitialPlaylist());
+
+      if (accessToken && refreshToken) {
+        await dispatch(getFavoriteTrack({ accessToken, refreshToken }));
       }
     };
 
-    fetchAllTracks();
-  }, [dispatch]);
+    getAllTracks();
+  }, [dispatch, accessToken, refreshToken]);
 
   return (
     <Wrapper>

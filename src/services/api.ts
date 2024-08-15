@@ -1,9 +1,7 @@
 import { fetchWithAuth } from "@/helpers/fetchWithAuth";
-import { log } from "console";
+import exp from "constants";
 
-const BASE_URL = "https://webdev-music-003b5b991590.herokuapp.com/";
-const BASE_USER_URL = "https://webdev-music-003b5b991590.herokuapp.com/user";
-const BASE_CATALOG_URL = "https://webdev-music-003b5b991590.herokuapp.com/catalog";
+const BASE_URL = "https://webdev-music-003b5b991590.herokuapp.com";
 
 export const registration = async ({
   username,
@@ -14,7 +12,7 @@ export const registration = async ({
   email: string;
   password: string;
 }) => {
-  const response = await fetch(`${BASE_USER_URL}/signup`, {
+  const response = await fetch(`${BASE_URL}/user/signup`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -36,7 +34,7 @@ export const registration = async ({
 };
 
 export const login = async ({ email, password }: { email: string; password: string }) => {
-  const response = await fetch(`${BASE_USER_URL}/login`, {
+  const response = await fetch(`${BASE_URL}/user/login`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -57,7 +55,7 @@ export const login = async ({ email, password }: { email: string; password: stri
 };
 
 export const getJWTokens = async ({ email, password }: { email: string; password: string }) => {
-  const response = await fetch(`${BASE_USER_URL}/token`, {
+  const response = await fetch(`${BASE_URL}/user/token/ `, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -77,8 +75,28 @@ export const getJWTokens = async ({ email, password }: { email: string; password
   return data;
 };
 
+export const getAccessToken = async (refresToken: string) => {
+  const response = await fetch(`${BASE_URL}/user/token/refresh/`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      refesh: refresToken,
+    }),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.detail);
+  }
+
+  const data = await response.json();
+  return data.access;
+};
+
 export const getAllTracks = async () => {
-  const response = await fetch(`${BASE_CATALOG_URL}/track/all/`);
+  const response = await fetch(`${BASE_URL}/catalog/track/all/`);
   if (!response.ok) {
     throw new Error(response.statusText);
   }
@@ -96,7 +114,7 @@ export async function likeTrack({
   refresh: string;
 }) {
   const res = await fetchWithAuth(
-    BASE_URL + `/track/${trackId}/favorite/`,
+    BASE_URL + `/catalog/track/${trackId}/favorite/`,
     {
       method: "POST",
       headers: {
@@ -118,7 +136,7 @@ export async function dislikeTrack({
   refresh: string;
 }) {
   const res = await fetchWithAuth(
-    BASE_URL + `/track/${trackId}/favorite/`,
+    `${BASE_URL}/catalog/track/favorite/`,
     {
       method: "DELETE",
       headers: {
@@ -131,21 +149,21 @@ export async function dislikeTrack({
 }
 
 export async function fetchFavoriteTracks({
-  access,
-  refresh,
+  accessToken,
+  refreshToken,
 }: {
-  access: string;
-  refresh: string;
+  accessToken: string;
+  refreshToken: string;
 }) {
   const res = await fetchWithAuth(
-    BASE_URL + `/track/favorite/all/`,
+    `${BASE_URL}/catalog/track/favorite/all/`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${access}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     },
-    refresh
+    refreshToken
   );
 
   return res.json();

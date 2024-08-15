@@ -2,7 +2,7 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TrackType } from "@/types/tracks";
-import { fetchFavoriteTracks } from "@/services/api";
+import { fetchFavoriteTracks, getAllTracks } from "@/services/api";
 
 type TrackStateType = {
   initialPlaylistState: TrackType[];
@@ -13,12 +13,37 @@ type TrackStateType = {
   isShuffleState: boolean;
 };
 
+export const getInitialPlaylist = createAsyncThunk(
+  "playlist/getInitialPlaylist",
+  async (_, { dispatch }) => {
+    try {
+      const data = await getAllTracks();
+      const tracks = data.map((track: { _id: string; [key: string]: any }) => {
+        const { _id, ...rest } = track;
+        return { id: _id, ...rest };
+      });
+      dispatch(setInitialPlaylist(tracks));
+    } catch (err) {
+      console.log("Произошла ошибка при получении треков");
+      dispatch(setInitialPlaylist([]));
+    }
+  }
+);
+
 export const getFavoriteTrack = createAsyncThunk(
   "playlist/getFavoriteTracks",
-  // указать, что объект с 2 полями
-  async (tokens: any) => {
-    const favoriteTracks = await fetchFavoriteTracks(tokens);
-    return favoriteTracks;
+  async ({ accessToken, refreshToken }: any, { rejectWithValue }) => {
+    try {
+      const data = await fetchFavoriteTracks({ accessToken, refreshToken });
+
+      const tracks = data.data.map((track: { _id: string; [key: string]: any }) => {
+        const { _id, ...rest } = track;
+        return { id: _id, ...rest };
+      });
+      return tracks;
+    } catch (err) {
+      rejectWithValue("Произошла ошибка при получении любимых треков");
+    }
   }
 );
 
@@ -73,16 +98,24 @@ const trackSlice = createSlice({
     },
     setDislikeTrack: (state, action: PayloadAction<number>) => {
       const trackID = action.payload;
-      // Убрать трек из likedPlaylistState
+      // const track = state.currentPlaylistState.find((track) => track.id === trackID);
+      // if (!track) return;
+      state.likedPlaylistState = state.likedPlaylistState.filter((track) => track.id !== trackID);
     },
     setLikeTrack: (state, action: PayloadAction<number>) => {
       const trackID = action.payload;
-      // Добавить трек в likedPlaylistState
+      const track = state.currentPlaylistState.find((track) => track.id === trackID);
+      if (!track) return;
+      state.likedPlaylistState.push(track);
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getFavoriteTrack.fulfilled, (state, action) => {
       state.likedPlaylistState = action.payload;
+      // Добавить логику отображения любимых треков в state.initialPlaylistState state.currentPlaylistState
+    });
+    builder.addCase(getFavoriteTrack.rejected, (state, action) => {
+      console.log("Произошла ошибка при получении любимых треков");
     });
   },
 });
