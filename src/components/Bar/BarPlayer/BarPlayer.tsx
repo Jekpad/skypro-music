@@ -32,6 +32,7 @@ const BarPlayer = ({
         toggleRepeat={toggleRepeat}
       />
       <BarPlayerTrackPlay
+        id={track?.id || 0}
         name={track?.name || ""}
         author={track?.author || ""}
         currentTime={currentTime || 0}
