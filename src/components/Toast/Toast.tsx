@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+
 import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

@@ -6,16 +6,16 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import Routes from "@/app/Routes";
 import { setUserLogout } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
+import useUserAuth from "@/hooks/useUserAuth";
 
 const Sidebar = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
-  const isAuth = useAppSelector((state) => state.auth.isAuth);
+  const { isAuth, setLogout } = useUserAuth();
   const username = useAppSelector((state) => state.auth.username);
 
   const handleUserAuth = async () => {
-    if (isAuth) await dispatch(setUserLogout());
+    if (isAuth) setLogout();
     else router.push(Routes.SIGNIN);
   };
 
@@ -48,6 +48,28 @@ const Sidebar = () => {
                 alt="day's playlist"
                 className={styles.sidebarImg}
                 src="/img/playlist02.png"
+                width={250}
+                height={150}
+              />
+            </a>
+          </div>
+          <div className={styles.sidebarItem}>
+            <a className={styles.sidebarLink} href="#">
+              <Image
+                alt="day's playlist"
+                className={styles.sidebarImg}
+                src="/img/playlist03.png"
+                width={250}
+                height={150}
+              />
+            </a>
+          </div>
+          <div className={styles.sidebarItem}>
+            <a className={styles.sidebarLink} href="#">
+              <Image
+                alt="day's playlist"
+                className={styles.sidebarImg}
+                src="/img/playlist03.png"
                 width={250}
                 height={150}
               />

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/store/ReduxProvider";
-import AuthProvider from "@/store/AuthProvider";
+import Toast from "@/components/Toast/Toast";
 
 const montserrat = Montserrat({ subsets: ["cyrillic"] });
 
@@ -19,9 +19,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <ReduxProvider>
-        <AuthProvider>
-          <body className={montserrat.className}>{children}</body>
-        </AuthProvider>
+        <body className={montserrat.className}>{children}</body>
       </ReduxProvider>
     </html>
   );

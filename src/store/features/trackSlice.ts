@@ -13,6 +13,15 @@ type TrackStateType = {
   isShuffleState: boolean;
 };
 
+const initialState: TrackStateType = {
+  initialPlaylistState: [],
+  currentPlaylistState: [],
+  likedPlaylistState: [],
+  currentTrackState: undefined,
+  isPlayingState: false,
+  isShuffleState: false,
+};
+
 export const getInitialPlaylist = createAsyncThunk(
   "playlist/getInitialPlaylist",
   async (_, { dispatch }) => {
@@ -24,7 +33,6 @@ export const getInitialPlaylist = createAsyncThunk(
       });
       dispatch(setInitialPlaylist(tracks));
     } catch (err) {
-      console.log("Произошла ошибка при получении треков");
       dispatch(setInitialPlaylist([]));
     }
   }
@@ -32,7 +40,10 @@ export const getInitialPlaylist = createAsyncThunk(
 
 export const getFavoriteTrack = createAsyncThunk(
   "playlist/getFavoriteTracks",
-  async ({ accessToken, refreshToken }: any, { rejectWithValue }) => {
+  async (
+    { accessToken, refreshToken }: { accessToken: string; refreshToken: string },
+    { rejectWithValue }
+  ) => {
     try {
       const data = await fetchFavoriteTracks({ accessToken, refreshToken });
 
@@ -42,19 +53,10 @@ export const getFavoriteTrack = createAsyncThunk(
       });
       return tracks;
     } catch (err) {
-      rejectWithValue("Произошла ошибка при получении любимых треков");
+      return rejectWithValue("Произошла ошибка при получении любимых треков");
     }
   }
 );
-
-const initialState: TrackStateType = {
-  initialPlaylistState: [],
-  currentPlaylistState: [],
-  likedPlaylistState: [],
-  currentTrackState: undefined,
-  isPlayingState: false,
-  isShuffleState: false,
-};
 
 const trackSlice = createSlice({
   name: "track",
@@ -108,11 +110,13 @@ const trackSlice = createSlice({
       if (!track) return;
       state.likedPlaylistState.push(track);
     },
+    setLikedPlaylist: (state, action: PayloadAction<TrackType[]>) => {
+      state.likedPlaylistState = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getFavoriteTrack.fulfilled, (state, action) => {
       state.likedPlaylistState = action.payload;
-      // Добавить логику отображения любимых треков в state.initialPlaylistState state.currentPlaylistState
     });
     builder.addCase(getFavoriteTrack.rejected, (state, action) => {
       console.log("Произошла ошибка при получении любимых треков");
@@ -129,5 +133,6 @@ export const {
   setShufflePlaylist,
   setDislikeTrack,
   setLikeTrack,
+  setLikedPlaylist,
 } = trackSlice.actions;
 export const trackReducer = trackSlice.reducer;

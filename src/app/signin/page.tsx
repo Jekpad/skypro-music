@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppDispatch } from "@/store/store";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -8,30 +7,25 @@ import classNames from "classnames";
 import Link from "next/link";
 import Routes from "../Routes";
 import { useState } from "react";
-import { setUserAuth } from "@/store/features/authSlice";
 import { useRouter } from "next/navigation";
 import Toast, { handleError, handleSuccess } from "@/components/Toast/Toast";
+import useUserAuth from "@/hooks/useUserAuth";
 
 export default function Signin() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setLogin } = useUserAuth();
 
-  // Переадресовывать, если уже авторизован
-  const signup = async () => {
-    try {
-      const result = await dispatch(setUserAuth({ email: email, password: password })).unwrap();
-      handleSuccess("Вы авторизованы");
-      router.push(Routes.BASE);
-    } catch (error) {
-      if (error instanceof Error) {
-        handleError(error.message);
-      } else {
-        handleError("Произошла непредвиденная ошибка");
-      }
-    }
+  const signin = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    const result = await setLogin({ email, password });
+
+    if (typeof result === "string") return handleError(result);
+
+    router.push(Routes.BASE);
   };
 
   return (
@@ -39,7 +33,7 @@ export default function Signin() {
       <div className={styles.Wrapper}>
         <div className={styles.ContainerEnter}>
           <div className={styles.ModalBlock}>
-            <div className={styles.ModalFormLogin}>
+            <form className={styles.ModalFormLogin}>
               <div className={styles.ModalLogo}>
                 <Link href={Routes.BASE}>
                   <Image src="/img/logo_modal.png" alt="Skyrpo logo" width={140} height={21} />
@@ -50,6 +44,7 @@ export default function Signin() {
                 type="text"
                 name="email"
                 placeholder="Почта"
+                autoComplete="username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -58,16 +53,17 @@ export default function Signin() {
                 type="password"
                 name="password"
                 placeholder="Пароль"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <button className={styles.ModalBtnEnter} onClick={signup}>
+              <button className={styles.ModalBtnEnter} onClick={signin}>
                 <a>Войти</a>
               </button>
               <button className={styles.ModalBtnSignup}>
                 <Link href={Routes.SIGNUP}>Зарегистрироваться</Link>
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>

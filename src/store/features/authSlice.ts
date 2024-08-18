@@ -4,6 +4,7 @@ import { getJWTokens, login } from "@/services/api";
 import { deleteAuthCookie, setAuthCookie } from "@/services/cookie";
 import { AuthType } from "@/types/auth";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { log } from "console";
 
 type AuthStateType = {
   isAuth: boolean;
@@ -79,20 +80,17 @@ const authSlice = createSlice({
       );
     },
     unsetAuth: (state) => {
-      state.isAuth = false;
-      state.id = undefined;
-      state.username = undefined;
-      state.email = undefined;
-      state.accessToken = undefined;
-      state.refreshToken = undefined;
-
+      state.isAuth = initialState.isAuth;
+      state.id = initialState.id;
+      state.username = initialState.username;
+      state.email = initialState.email;
+      state.accessToken = initialState.accessToken;
+      state.refreshToken = initialState.refreshToken;
       deleteAuthCookie();
     },
   },
   extraReducers(builder) {
-    builder.addCase(setUserAuth.rejected, (state, action) => {
-      console.error(action);
-    });
+    builder.addCase(setUserAuth.rejected, (state, action) => {});
   },
 });
 

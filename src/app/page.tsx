@@ -8,27 +8,23 @@ import Bar from "@/components/Bar/Bar";
 import Nav from "@/components/Nav/Nav";
 import Main from "@/components/Main/Main";
 import { SkeletonTheme } from "react-loading-skeleton";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getFavoriteTrack, getInitialPlaylist } from "@/store/features/trackSlice";
+import { useAppDispatch } from "@/store/store";
+import { getInitialPlaylist } from "@/store/features/trackSlice";
 import { useEffect } from "react";
+import useUserAuth from "@/hooks/useUserAuth";
 
 export default function Home() {
   const dispatch = useAppDispatch();
-
-  const accessToken = useAppSelector((state) => state.auth.accessToken);
-  const refreshToken = useAppSelector((state) => state.auth.refreshToken);
+  const { checkLogin } = useUserAuth();
 
   useEffect(() => {
-    const getAllTracks = async () => {
+    const initialApp = async () => {
       await dispatch(getInitialPlaylist());
-
-      if (accessToken && refreshToken) {
-        await dispatch(getFavoriteTrack({ accessToken, refreshToken }));
-      }
+      await checkLogin();
     };
 
-    getAllTracks();
-  }, [dispatch, accessToken, refreshToken]);
+    initialApp();
+  }, []);
 
   return (
     <Wrapper>
