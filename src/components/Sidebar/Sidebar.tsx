@@ -25,7 +25,7 @@ const Sidebar = () => {
         <p className={styles.sidebarPersonalName}>{username}</p>
         <div className={styles.sidebarIcon} onClick={handleUserAuth}>
           <svg>
-            <use xlinkHref="img/icon/sprite.svg#icon-logout" />
+            <use xlinkHref="/img/icon/sprite.svg#icon-logout" />
           </svg>
         </div>
       </div>

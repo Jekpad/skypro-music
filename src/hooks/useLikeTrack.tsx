@@ -16,7 +16,7 @@ const useLikeTrack = (trackID: number) => {
 
   // Получаем состояние лайка из избранных треков
   // или получать в качестве пропса
-  const isLiked = !!likedTraks ? likedTraks.find((track) => track.id === trackID) : false;
+  const isLiked = !!likedTraks ? !!likedTraks.find((track) => track.id === trackID) : false;
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();

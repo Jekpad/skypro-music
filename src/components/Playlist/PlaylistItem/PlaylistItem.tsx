@@ -22,7 +22,7 @@ const PlaylistItem = ({ track }: Props) => {
 
   const trackTitleImageClass = classNames({
     [styles.trackTitleImage]: true,
-    [styles.selected]: track === currentTrack,
+    [styles.selected]: track.id === currentTrack?.id,
     [styles.playing]: isPlaying,
   });
 
@@ -32,7 +32,7 @@ const PlaylistItem = ({ track }: Props) => {
         <div className={styles.trackTitle}>
           <div className={trackTitleImageClass}>
             <svg className={styles.trackTitleSvg}>
-              <use xlinkHref="img/icon/sprite.svg#icon-note" />
+              <use xlinkHref="/img/icon/sprite.svg#icon-note" />
             </svg>
           </div>
           <div className={styles.trackTitleText}>
@@ -51,9 +51,9 @@ const PlaylistItem = ({ track }: Props) => {
         <div className={styles.trackTime} onClick={handleLike}>
           <svg className={styles.trackTimeSvg}>
             {isLiked ? (
-              <use xlinkHref="img/icon/sprite.svg#icon-like-submited" />
+              <use xlinkHref="/img/icon/sprite.svg#icon-like-submited" />
             ) : (
-              <use xlinkHref="img/icon/sprite.svg#icon-like" />
+              <use xlinkHref="/img/icon/sprite.svg#icon-like" />
             )}
           </svg>
           <span className={styles.trackTimeText}>{serializeTrackTime(duration_in_seconds)}</span>

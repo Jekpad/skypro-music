@@ -28,7 +28,7 @@ const BarPlayerTrackPlay = ({ id, name, author, currentTime, duration }: TrackPl
       <div className={stylesMain.trackPlayContain}>
         <div className={stylesMain.trackPlayImage}>
           <svg className={stylesMain.trackPlaySvg}>
-            <use xlinkHref="img/icon/sprite.svg#icon-note" />
+            <use xlinkHref="/img/icon/sprite.svg#icon-note" />
           </svg>
         </div>
         <div className={stylesMain.trackPlayAuthor}>
@@ -50,21 +50,11 @@ const BarPlayerTrackPlay = ({ id, name, author, currentTime, duration }: TrackPl
           <svg className={stylesMain.trackPlayLikeSvg}>
             <use
               xlinkHref={
-                isLiked ? "img/icon/sprite.svg#icon-dislike" : "img/icon/sprite.svg#icon-like"
+                isLiked ? "/img/icon/sprite.svg#icon-dislike" : "/img/icon/sprite.svg#icon-like"
               }
             />
           </svg>
         </div>
-        {/* <div className={classNames(stylesMain.trackPlayLike)} onClick={inWorking}>
-          <svg className={stylesMain.trackPlayLikeSvg}>
-            <use xlinkHref="img/icon/sprite.svg#icon-like" />
-          </svg>
-        </div>
-        <div className={classNames(stylesMain.trackPlayDislike)} onClick={inWorking}>
-          <svg className={stylesMain.trackPlayDislikeSvg}>
-            <use xlinkHref="img/icon/sprite.svg#icon-dislike" />
-          </svg>
-        </div> */}
       </div>
       <Toast />
     </div>

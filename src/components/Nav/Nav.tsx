@@ -8,13 +8,14 @@ import Routes from "@/app/Routes";
 import { useRouter } from "next/navigation";
 import useUserAuth from "@/hooks/useUserAuth";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { stat } from "fs";
+
 import { getInitialPlaylist, setInitialPlaylist } from "@/store/features/trackSlice";
+import Link from "next/link";
 
 const Nav = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const likedPlaylist = useAppSelector((state) => state.track.likedPlaylistState);
+  // const dispatch = useAppDispatch();
+  // const likedPlaylist = useAppSelector((state) => state.track.likedPlaylistState);
 
   const { isAuth, setLogout } = useUserAuth();
 
@@ -25,13 +26,13 @@ const Nav = () => {
     else router.push(Routes.SIGNIN);
   };
 
-  const selectLikedPlaylist = () => {
-    dispatch(setInitialPlaylist(likedPlaylist));
-  };
+  // const selectLikedPlaylist = () => {
+  //   dispatch(setInitialPlaylist(likedPlaylist));
+  // };
 
-  const selectInitialPlaylist = () => {
-    dispatch(getInitialPlaylist());
-  };
+  // const selectInitialPlaylist = () => {
+  //   dispatch(getInitialPlaylist());
+  // };
 
   const menuListClass = classNames({
     [styles.menuList]: true,
@@ -62,15 +63,15 @@ const Nav = () => {
       <div className={styles.menu}>
         <ul className={menuListClass}>
           <li className={styles.menuItem}>
-            <a className={styles.menuLink} onClick={selectInitialPlaylist}>
+            <Link className={styles.menuLink} href={Routes.BASE}>
               Главное
-            </a>
+            </Link>
           </li>
           {isAuth && (
             <li className={styles.menuItem}>
-              <a className={styles.menuLink} onClick={selectLikedPlaylist}>
+              <Link href={Routes.FAVORITES} className={styles.menuLink}>
                 Мой плейлист
-              </a>
+              </Link>
             </li>
           )}
           <li className={styles.menuItem}>

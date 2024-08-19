@@ -16,7 +16,7 @@ const PlaylistItemSkeleton = ({ items = 1 }: Props) => {
           <div className={styles.trackTitle}>
             <div className={styles.trackTitleImage}>
               <svg className={styles.trackTitleSvg}>
-                <use xlinkHref="img/icon/sprite.svg#icon-note" />
+                <use xlinkHref="/img/icon/sprite.svg#icon-note" />
               </svg>
             </div>
             <div className={styles.trackTitleText}>
@@ -33,7 +33,7 @@ const PlaylistItemSkeleton = ({ items = 1 }: Props) => {
           </div>
           <div className={styles.trackTime}>
             <svg className={styles.trackTimeSvg}>
-              <use xlinkHref="img/icon/sprite.svg#icon-like" />
+              <use xlinkHref="/img/icon/sprite.svg#icon-like" />
             </svg>
             <Skeleton className={styles.trackTimeText} width={40} />
           </div>
