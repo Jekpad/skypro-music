@@ -9,6 +9,7 @@ type TrackStateType = {
   currentPlaylistState: TrackType[];
   likedPlaylistState: TrackType[];
   currentTrackState: TrackType | undefined;
+  currentPlaylistTypeState: "All" | "Favorites" | "Сollection";
   isPlayingState: boolean;
   isShuffleState: boolean;
 };
@@ -18,6 +19,7 @@ const initialState: TrackStateType = {
   currentPlaylistState: [],
   likedPlaylistState: [],
   currentTrackState: undefined,
+  currentPlaylistTypeState: "All",
   isPlayingState: false,
   isShuffleState: false,
 };
@@ -62,6 +64,9 @@ const trackSlice = createSlice({
   name: "track",
   initialState,
   reducers: {
+    setPlaylistType: (state, action: PayloadAction<"All" | "Favorites" | "Сollection">) => {
+      state.currentPlaylistTypeState = action.payload;
+    },
     setTrack: (state, action: PayloadAction<TrackType | undefined>) => {
       state.currentTrackState = action.payload;
     },
@@ -100,9 +105,17 @@ const trackSlice = createSlice({
     },
     setDislikeTrack: (state, action: PayloadAction<number>) => {
       const trackID = action.payload;
-      // const track = state.currentPlaylistState.find((track) => track.id === trackID);
-      // if (!track) return;
       state.likedPlaylistState = state.likedPlaylistState.filter((track) => track.id !== trackID);
+      if (state.currentPlaylistTypeState === "Favorites") {
+        console.log("Удаляем плейлист");
+
+        state.currentPlaylistState = state.currentPlaylistState.filter(
+          (track) => track.id !== trackID
+        );
+        state.initialPlaylistState = state.initialPlaylistState.filter(
+          (track) => track.id !== trackID
+        );
+      }
     },
     setLikeTrack: (state, action: PayloadAction<number>) => {
       const trackID = action.payload;
@@ -125,6 +138,7 @@ const trackSlice = createSlice({
 });
 
 export const {
+  setPlaylistType,
   setTrack,
   setNextTrack,
   setPreviousTrack,

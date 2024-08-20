@@ -2,7 +2,7 @@
 
 import Routes from "@/app/Routes";
 import Main from "@/components/Main/Main";
-import { getFavoriteTrack, setInitialPlaylist } from "@/store/features/trackSlice";
+import { getFavoriteTrack, setInitialPlaylist, setPlaylistType } from "@/store/features/trackSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -22,12 +22,13 @@ export default function Page() {
     const getTracks = async () => {
       try {
         const favTracks = await dispatch(getFavoriteTrack({ accessToken, refreshToken })).unwrap();
-        dispatch(setInitialPlaylist(favTracks));
+        await dispatch(setPlaylistType("Favorites"));
+        await dispatch(setInitialPlaylist(favTracks));
       } catch (error) {}
     };
 
     getTracks();
   }, []);
 
-  return <Main title={"Избранное"} />;
+  return <Main title={"Мои треки"} />;
 }

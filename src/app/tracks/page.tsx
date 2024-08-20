@@ -2,7 +2,7 @@
 
 import Main from "@/components/Main/Main";
 import useUserAuth from "@/hooks/useUserAuth";
-import { getInitialPlaylist } from "@/store/features/trackSlice";
+import { getInitialPlaylist, setPlaylistType } from "@/store/features/trackSlice";
 import { useAppDispatch } from "@/store/store";
 import { useEffect } from "react";
 
@@ -13,6 +13,7 @@ export default function Page() {
   useEffect(() => {
     const initialApp = async () => {
       await dispatch(getInitialPlaylist());
+      await dispatch(setPlaylistType("All"));
       await checkLogin();
     };
 

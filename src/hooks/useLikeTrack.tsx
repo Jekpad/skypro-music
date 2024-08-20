@@ -1,5 +1,6 @@
 "use client";
 
+import { handleError } from "@/components/Toast/Toast";
 import { dislikeTrack, likeTrack } from "@/services/api";
 import { setDislikeTrack, setLikeTrack } from "@/store/features/trackSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -20,7 +21,7 @@ const useLikeTrack = (trackID: number) => {
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!tokens.access || !tokens.refresh) return alert("Вы не авторизованы!");
+    if (!tokens.access || !tokens.refresh) return handleError("Вы не авторизованы");
 
     const action = isLiked ? dislikeTrack : likeTrack;
 
@@ -37,6 +38,7 @@ const useLikeTrack = (trackID: number) => {
         dispatch(setLikeTrack(trackID));
       }
     } catch (error) {
+      handleError("Непредвиденная ошибка");
       console.error(error);
     }
   };
