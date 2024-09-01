@@ -20,7 +20,7 @@ const Playlist = () => {
         </div>
       </div>
       <div className={styles.playlist}>
-        {tracks.length == 0 && <PlaylistItemSkeleton items={20} />}
+        {tracks === undefined && <PlaylistItemSkeleton items={20} />}
         {Array.isArray(tracks) &&
           tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
       </div>

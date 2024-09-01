@@ -136,7 +136,7 @@ export async function dislikeTrack({
   refresh: string;
 }) {
   const res = await fetchWithAuth(
-    `${BASE_URL}/catalog/track/favorite/`,
+    `${BASE_URL}/catalog/track/${trackId}/favorite/`,
     {
       method: "DELETE",
       headers: {

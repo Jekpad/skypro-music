@@ -5,8 +5,8 @@ import { TrackType } from "@/types/tracks";
 import { fetchFavoriteTracks, getAllTracks } from "@/services/api";
 
 type TrackStateType = {
-  initialPlaylistState: TrackType[];
-  currentPlaylistState: TrackType[];
+  initialPlaylistState?: TrackType[];
+  currentPlaylistState?: TrackType[];
   likedPlaylistState: TrackType[];
   currentTrackState: TrackType | undefined;
   currentPlaylistTypeState: "All" | "Favorites" | "Сollection";
@@ -15,8 +15,8 @@ type TrackStateType = {
 };
 
 const initialState: TrackStateType = {
-  initialPlaylistState: [],
-  currentPlaylistState: [],
+  initialPlaylistState: undefined,
+  currentPlaylistState: undefined,
   likedPlaylistState: [],
   currentTrackState: undefined,
   currentPlaylistTypeState: "All",
@@ -75,6 +75,8 @@ const trackSlice = createSlice({
       state.initialPlaylistState = action.payload;
     },
     setPreviousTrack: (state) => {
+      if (state.currentPlaylistState === undefined) return;
+
       const currentTrackIndex = state.currentPlaylistState.findIndex(
         (track) => track.id === state.currentTrackState?.id
       );
@@ -83,6 +85,8 @@ const trackSlice = createSlice({
       state.isPlayingState = true;
     },
     setNextTrack: (state) => {
+      if (state.currentPlaylistState === undefined) return;
+
       const currentTrackIndex = state.currentPlaylistState.findIndex(
         (track) => track.id === state.currentTrackState?.id
       );
@@ -97,6 +101,8 @@ const trackSlice = createSlice({
       state.isPlayingState = action.payload;
     },
     setShufflePlaylist: (state, action: PayloadAction<boolean>) => {
+      if (state.initialPlaylistState === undefined) return;
+
       state.currentPlaylistState = !action.payload
         ? state.initialPlaylistState
         : state.initialPlaylistState.toSorted((a, b) => Math.random() - 0.5);
@@ -106,18 +112,22 @@ const trackSlice = createSlice({
     setDislikeTrack: (state, action: PayloadAction<number>) => {
       const trackID = action.payload;
       state.likedPlaylistState = state.likedPlaylistState.filter((track) => track.id !== trackID);
-      if (state.currentPlaylistTypeState === "Favorites") {
-        console.log("Удаляем плейлист");
 
-        state.currentPlaylistState = state.currentPlaylistState.filter(
-          (track) => track.id !== trackID
-        );
-        state.initialPlaylistState = state.initialPlaylistState.filter(
-          (track) => track.id !== trackID
-        );
+      if (state.currentPlaylistTypeState === "Favorites") {
+        if (state.currentPlaylistState !== undefined) {
+          state.currentPlaylistState = state.currentPlaylistState.filter(
+            (track) => track.id !== trackID
+          );
+        }
+        if (state.initialPlaylistState !== undefined) {
+          state.initialPlaylistState = state.initialPlaylistState.filter(
+            (track) => track.id !== trackID
+          );
+        }
       }
     },
     setLikeTrack: (state, action: PayloadAction<number>) => {
+      if (state.currentPlaylistState === undefined) return;
       const trackID = action.payload;
       const track = state.currentPlaylistState.find((track) => track.id === trackID);
       if (!track) return;
