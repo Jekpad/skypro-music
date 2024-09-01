@@ -1,4 +1,5 @@
 import { fetchWithAuth } from "@/helpers/fetchWithAuth";
+import { CustomCatalogType } from "@/types/customCatalog";
 import exp from "constants";
 
 const BASE_URL = "https://webdev-music-003b5b991590.herokuapp.com";
@@ -167,4 +168,21 @@ export async function fetchFavoriteTracks({
   );
 
   return res.json();
+}
+
+export async function getCatalogs(): Promise<CustomCatalogType[]> {
+  const response = await fetch(`${BASE_URL}/catalog/selection/all`, {
+    method: "GET",
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.detail);
+  }
+
+  const data = await response.json();
+  return data.data;
 }

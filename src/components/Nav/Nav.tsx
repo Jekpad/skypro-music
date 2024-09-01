@@ -7,32 +7,19 @@ import { useState } from "react";
 import Routes from "@/app/Routes";
 import { useRouter } from "next/navigation";
 import useUserAuth from "@/hooks/useUserAuth";
-import { useAppDispatch, useAppSelector } from "@/store/store";
 
 import { getInitialPlaylist, setInitialPlaylist } from "@/store/features/trackSlice";
 import Link from "next/link";
 
 const Nav = () => {
   const router = useRouter();
-  // const dispatch = useAppDispatch();
-  // const likedPlaylist = useAppSelector((state) => state.track.likedPlaylistState);
-
   const { isAuth, setLogout } = useUserAuth();
-
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
   const handleUserAuth = async () => {
     if (isAuth) setLogout();
     else router.push(Routes.SIGNIN);
   };
-
-  // const selectLikedPlaylist = () => {
-  //   dispatch(setInitialPlaylist(likedPlaylist));
-  // };
-
-  // const selectInitialPlaylist = () => {
-  //   dispatch(getInitialPlaylist());
-  // };
 
   const menuListClass = classNames({
     [styles.menuList]: true,
