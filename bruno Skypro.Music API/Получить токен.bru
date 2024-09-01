@@ -1,11 +1,11 @@
 meta {
   name: Получить токен
   type: http
-  seq: 5
+  seq: 4
 }
 
 post {
-  url: {{baseUser}}/token/
+  url: {{baseURL}}/user/token/
   body: json
   auth: none
 }
@@ -16,8 +16,8 @@ headers {
 
 body:json {
   {
-    "email": "gleb@fokin.ru",
-    "password": "gleb@fokin.ru"
+    "email": "tests@mail.ru",
+    "password": "111111"
   }
 }
 

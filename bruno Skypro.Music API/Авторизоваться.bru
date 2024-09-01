@@ -1,11 +1,11 @@
 meta {
   name: Авторизоваться
   type: http
-  seq: 4
+  seq: 3
 }
 
 post {
-  url: {{baseUser}}/login/
+  url: {{baseURL}}/user/login/
   body: json
   auth: none
 }
@@ -16,8 +16,8 @@ headers {
 
 body:json {
   {
-    "email": "gleb@fokin.ru",
-    "password": "gleb@fokin.ru"
+    "email": "tests@mail.ru",
+    "password": "111111"
   }
 }
 

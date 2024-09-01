@@ -11,8 +11,8 @@ const Filter = () => {
   const tracks = useAppSelector((state) => state.track.currentPlaylistState);
 
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const authorList = getUniqueValues(tracks, "author");
-  const genreList = getUniqueValues(tracks, "genre");
+  const authorList = tracks ? getUniqueValues(tracks, "author") : [];
+  const genreList = tracks ? getUniqueValues(tracks, "genre") : [];
 
   const handleFilter = (newFilter: string) => {
     setSelectedFilter((currentFilter) => (currentFilter === newFilter ? null : newFilter));

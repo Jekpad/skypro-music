@@ -1,22 +1,22 @@
 meta {
   name: Обновить токен
   type: http
-  seq: 6
+  seq: 5
 }
 
 post {
-  url: {{baseUser}}/token/refresh/
+  url: https://webdev-music-003b5b991590.herokuapp.com/user/token/refresh/
   body: json
   auth: none
 }
 
 headers {
-  content-type: application/json
+  ~content-type: application/json
 }
 
 body:json {
-  {
-    "refresh": "..."
+  {"refresh":
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgzIiwidXNlcm5hbWUiOiJ0ZXN0cyIsImVtYWlsIjoidGVzdHNAbWFpbC5ydSIsImlhdCI6MTcyMzkxNTQ4NywiZXhwIjoxNzIzOTE3Mjg3fQ.IpuCtcwkKZrQuVHNHaRfAWvBi7RMnIoCzTCmqv-JRBQ"
   }
 }
 
