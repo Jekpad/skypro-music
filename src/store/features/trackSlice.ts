@@ -22,18 +22,18 @@ const initialState: TrackStateType = {
   isShuffleState: false,
 };
 
-export const getInitialPlaylist = createAsyncThunk(
+export const getInitialPlaylist = createAsyncThunk<TrackType[], void, { rejectValue: string }>(
   "playlist/getInitialPlaylist",
-  async (_, { dispatch }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const data = await getAllTracks();
       const tracks = data.map((track: { _id: string; [key: string]: any }) => {
         const { _id, ...rest } = track;
         return { id: _id, ...rest };
       });
-      dispatch(setInitialPlaylist(tracks));
+      return tracks;
     } catch (err) {
-      dispatch(setInitialPlaylist([]));
+      return rejectWithValue("Произошла ошибка при получении списка треков");
     }
   }
 );
@@ -136,11 +136,21 @@ const trackSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getInitialPlaylist.fulfilled, (state, action) => {
+      state.initialPlaylistState = action.payload;
+      state.currentPlaylistState = action.payload;
+    });
+    builder.addCase(getInitialPlaylist.rejected, (state, action) => {
+      state.initialPlaylistState = [];
+      state.currentPlaylistState = [];
+      console.error(action.payload);
+    });
+
     builder.addCase(getFavoriteTrack.fulfilled, (state, action) => {
       state.likedPlaylistState = action.payload;
     });
     builder.addCase(getFavoriteTrack.rejected, (state, action) => {
-      console.log("Произошла ошибка при получении любимых треков");
+      console.error(action.payload);
     });
   },
 });
