@@ -1,10 +1,7 @@
-"use client";
-
 import { getJWTokens, login } from "@/services/api";
 import { deleteAuthCookie, setAuthCookie } from "@/services/cookie";
 import { AuthType } from "@/types/auth";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { log } from "console";
 
 type AuthStateType = {
   isAuth: boolean;
