@@ -23,6 +23,7 @@ const Playlist = () => {
         {tracks === undefined && <PlaylistItemSkeleton items={20} />}
         {Array.isArray(tracks) &&
           tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
+        {Array.isArray(tracks) && tracks.length === 0 && "Треки не найдены"}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ type TrackStateType = {
   currentPlaylistTypeState: "All" | "Favorites" | "Сollection";
   isPlayingState: boolean;
   isShuffleState: boolean;
-  filters: Partial<Record<FilterType["type"], FilterType>>;
+  filters: FilterType[];
   sort: Partial<Record<SortType["type"], SortType>>;
 };
 
@@ -24,7 +24,7 @@ const initialState: TrackStateType = {
   currentPlaylistTypeState: "All",
   isPlayingState: false,
   isShuffleState: false,
-  filters: {},
+  filters: [],
   sort: {},
 };
 
@@ -144,34 +144,43 @@ const trackSlice = createSlice({
       state,
       action: PayloadAction<{ operation: "add" | "delete"; filter: FilterType }>
     ) => {
-      if (action.payload.operation === "add") {
-        state.filters[action.payload.filter.type] = action.payload.filter;
+      const { operation, filter } = action.payload;
+
+      if (operation === "add") {
+        if (filter.type === "search") {
+          state.filters = state.filters.filter((f) => f.type !== "search");
+          state.filters.push(filter);
+        } else {
+          state.filters.push(filter);
+        }
       } else {
-        delete state.filters[action.payload.filter.type];
+        state.filters = state.filters.filter(
+          (f) => f.type !== filter.type || f.value !== filter.value
+        );
       }
 
       state.currentPlaylistState = state.initialPlaylistState?.filter((track) => {
-        if (Object.values(state.filters).length <= 0) return true;
+        if (state.filters.length <= 0) return true;
 
-        let result = true;
+        const filtersByType = state.filters.reduce<Record<string, string[]>>((acc, filter) => {
+          if (!acc[filter.type]) {
+            acc[filter.type] = [];
+          }
+          acc[filter.type].push(filter.value);
+          return acc;
+        }, {});
 
-        Object.values(state.filters).forEach((filter) => {
-          if (!result) return;
-
-          if (filter.type === "search") {
-            return (result =
-              track.name.toLowerCase().includes(filter.value.toLowerCase()) ||
-              track.author.toLowerCase().includes(filter.value.toLowerCase()));
+        return Object.entries(filtersByType).every(([type, values]) => {
+          if (type === "search") {
+            return values.some((value) => track.name.toLowerCase().includes(value.toLowerCase()));
           }
 
-          if (filter.type === "genre") {
-            return (result = track.genre.includes(filter.value));
+          if (type === "genre") {
+            return values.some((value) => track.genre.includes(value));
           }
 
-          return (result = track[filter.type] === filter.value);
+          return values.some((value) => track[type as keyof typeof track] === value);
         });
-
-        return result;
       });
     },
   },

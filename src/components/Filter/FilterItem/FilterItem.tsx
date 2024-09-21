@@ -7,7 +7,7 @@ interface Props {
   filterList: string[];
   isActive: boolean;
   toggleOpen: (_: string) => void;
-  currentValue?: string;
+  currentValues?: string[];
   handleFilter?: (value: string) => void;
 }
 
@@ -16,14 +16,14 @@ const FilterItem = ({
   filterList,
   isActive = false,
   toggleOpen,
-  currentValue,
+  currentValues,
   handleFilter,
 }: Props) => {
   let filterButtonClass = classNames({
     [styles.filterButton]: true,
     [styles["_btn-text"]]: true,
     [styles.active]: isActive,
-    [styles.filtered]: !!currentValue,
+    [styles.filtered]: currentValues?.length,
   });
 
   let filerPopupClass = classNames({
@@ -48,7 +48,7 @@ const FilterItem = ({
               <li
                 className={classNames({
                   [styles.filterPopupItem]: true,
-                  [styles.selected]: item == currentValue,
+                  [styles.selected]: currentValues?.includes(item),
                 })}
                 key={index}
                 onClick={() => handleFilter && handleFilter(item)}
