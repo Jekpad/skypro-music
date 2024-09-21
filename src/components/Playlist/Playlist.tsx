@@ -5,7 +5,7 @@ import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
 import { useAppSelector } from "@/store/store";
 
 const Playlist = () => {
-  const tracks = useAppSelector((state) => state.track.initialPlaylistState);
+  const tracks = useAppSelector((state) => state.track.currentPlaylistState);
 
   return (
     <div className={styles.playlistContent}>

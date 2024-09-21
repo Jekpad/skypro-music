@@ -1,6 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { TrackType } from "@/types/tracks";
 import { fetchFavoriteTracks, getAllTracks } from "@/services/api";
+import { FilterType } from "@/types/filter";
+import { SortType } from "@/types/sort";
 
 type TrackStateType = {
   initialPlaylistState?: TrackType[];
@@ -10,6 +12,8 @@ type TrackStateType = {
   currentPlaylistTypeState: "All" | "Favorites" | "Сollection";
   isPlayingState: boolean;
   isShuffleState: boolean;
+  filters: Partial<Record<FilterType["type"], FilterType>>;
+  sort: Partial<Record<SortType["type"], SortType>>;
 };
 
 const initialState: TrackStateType = {
@@ -20,6 +24,8 @@ const initialState: TrackStateType = {
   currentPlaylistTypeState: "All",
   isPlayingState: false,
   isShuffleState: false,
+  filters: {},
+  sort: {},
 };
 
 export const getInitialPlaylist = createAsyncThunk<TrackType[], void, { rejectValue: string }>(
@@ -134,6 +140,40 @@ const trackSlice = createSlice({
     setLikedPlaylist: (state, action: PayloadAction<TrackType[]>) => {
       state.likedPlaylistState = action.payload;
     },
+    filterPlaylist: (
+      state,
+      action: PayloadAction<{ operation: "add" | "delete"; filter: FilterType }>
+    ) => {
+      if (action.payload.operation === "add") {
+        state.filters[action.payload.filter.type] = action.payload.filter;
+      } else {
+        delete state.filters[action.payload.filter.type];
+      }
+
+      state.currentPlaylistState = state.initialPlaylistState?.filter((track) => {
+        if (Object.values(state.filters).length <= 0) return true;
+
+        let result = true;
+
+        Object.values(state.filters).forEach((filter) => {
+          if (!result) return;
+
+          if (filter.type === "search") {
+            return (result =
+              track.name.toLowerCase().includes(filter.value.toLowerCase()) ||
+              track.author.toLowerCase().includes(filter.value.toLowerCase()));
+          }
+
+          if (filter.type === "genre") {
+            return (result = track.genre.includes(filter.value));
+          }
+
+          return (result = track[filter.type] === filter.value);
+        });
+
+        return result;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getInitialPlaylist.fulfilled, (state, action) => {
@@ -166,5 +206,6 @@ export const {
   setDislikeTrack,
   setLikeTrack,
   setLikedPlaylist,
+  filterPlaylist,
 } = trackSlice.actions;
 export const trackReducer = trackSlice.reducer;

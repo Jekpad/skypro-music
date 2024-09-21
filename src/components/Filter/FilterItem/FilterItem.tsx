@@ -6,14 +6,24 @@ interface Props {
   title: string;
   filterList: string[];
   isActive: boolean;
-  handleFilter: Function;
+  toggleOpen: (_: string) => void;
+  currentValue?: string;
+  handleFilter?: (value: string) => void;
 }
 
-const FilterItem = ({ title, filterList, isActive = false, handleFilter }: Props) => {
+const FilterItem = ({
+  title,
+  filterList,
+  isActive = false,
+  toggleOpen,
+  currentValue,
+  handleFilter,
+}: Props) => {
   let filterButtonClass = classNames({
     [styles.filterButton]: true,
     [styles["_btn-text"]]: true,
     [styles.active]: isActive,
+    [styles.filtered]: !!currentValue,
   });
 
   let filerPopupClass = classNames({
@@ -21,21 +31,34 @@ const FilterItem = ({ title, filterList, isActive = false, handleFilter }: Props
     [styles.active]: isActive,
   });
 
+  let filerPopupCountClass = classNames({
+    [styles.filterPopupCount]: true,
+    [styles.active]: isActive,
+  });
+
   return (
     <>
       <div className={styles.filterContainer}>
-        <div className={filterButtonClass} onClick={() => handleFilter(title)}>
+        <div className={filterButtonClass} onClick={() => toggleOpen(title)}>
           {title}
         </div>
         <div className={filerPopupClass}>
           <ul className={styles.filterPopup}>
             {filterList.map((item, index) => (
-              <li className={styles.filterPopupItem} key={index}>
+              <li
+                className={classNames({
+                  [styles.filterPopupItem]: true,
+                  [styles.selected]: item == currentValue,
+                })}
+                key={index}
+                onClick={() => handleFilter && handleFilter(item)}
+              >
                 {item}
               </li>
             ))}
           </ul>
         </div>
+        <div className={filerPopupCountClass}>{Object.values(filterList).length}</div>
       </div>
     </>
   );
