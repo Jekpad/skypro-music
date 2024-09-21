@@ -3,6 +3,7 @@ import { TrackType } from "@/types/tracks";
 import { fetchFavoriteTracks, getAllTracks } from "@/services/api";
 import { FilterType } from "@/types/filter";
 import { SortType } from "@/types/sort";
+import { act } from "react";
 
 type TrackStateType = {
   initialPlaylistState?: TrackType[];
@@ -63,6 +64,35 @@ export const getFavoriteTrack = createAsyncThunk(
     }
   }
 );
+
+const filterPlaylistState = (
+  initialPlaylistState: TrackStateType["initialPlaylistState"],
+  filters: TrackStateType["filters"]
+): TrackStateType["currentPlaylistState"] => {
+  return initialPlaylistState?.filter((track) => {
+    if (filters.length <= 0) return true;
+
+    const filtersByType = filters.reduce<Record<string, string[]>>((acc, filter) => {
+      if (!acc[filter.type]) {
+        acc[filter.type] = [];
+      }
+      acc[filter.type].push(filter.value);
+      return acc;
+    }, {});
+
+    return Object.entries(filtersByType).every(([type, values]) => {
+      if (type === "search") {
+        return values.some((value) => track.name.toLowerCase().includes(value.toLowerCase()));
+      }
+
+      if (type === "genre") {
+        return values.some((value) => track.genre.includes(value));
+      }
+
+      return values.some((value) => track[type as keyof typeof track] === value);
+    });
+  });
+};
 
 const trackSlice = createSlice({
   name: "track",
@@ -159,28 +189,23 @@ const trackSlice = createSlice({
         );
       }
 
-      state.currentPlaylistState = state.initialPlaylistState?.filter((track) => {
-        if (state.filters.length <= 0) return true;
+      state.currentPlaylistState = filterPlaylistState(state.initialPlaylistState, state.filters);
+    },
+    sortPlaylist: (state, action: PayloadAction<SortType>) => {
+      state.sort[action.payload.type] = action.payload;
 
-        const filtersByType = state.filters.reduce<Record<string, string[]>>((acc, filter) => {
-          if (!acc[filter.type]) {
-            acc[filter.type] = [];
-          }
-          acc[filter.type].push(filter.value);
-          return acc;
-        }, {});
+      if (!state.currentPlaylistState) return;
 
-        return Object.entries(filtersByType).every(([type, values]) => {
-          if (type === "search") {
-            return values.some((value) => track.name.toLowerCase().includes(value.toLowerCase()));
-          }
+      if (action.payload.direction === "default") {
+        state.currentPlaylistState = filterPlaylistState(state.initialPlaylistState, state.filters);
+        return;
+      }
 
-          if (type === "genre") {
-            return values.some((value) => track.genre.includes(value));
-          }
+      state.currentPlaylistState = [...state.currentPlaylistState].sort((a, b) => {
+        const dateA = new Date(a.release_date).getTime();
+        const dateB = new Date(b.release_date).getTime();
 
-          return values.some((value) => track[type as keyof typeof track] === value);
-        });
+        return action.payload.direction === "asc" ? dateB - dateA : dateA - dateB;
       });
     },
   },
@@ -216,5 +241,6 @@ export const {
   setLikeTrack,
   setLikedPlaylist,
   filterPlaylist,
+  sortPlaylist,
 } = trackSlice.actions;
 export const trackReducer = trackSlice.reducer;

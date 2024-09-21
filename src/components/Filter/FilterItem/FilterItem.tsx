@@ -6,18 +6,18 @@ interface Props {
   title: string;
   filterList: string[];
   isActive: boolean;
-  toggleOpen: (_: string) => void;
   currentValues?: string[];
-  handleFilter?: (value: string) => void;
+  toggleOpen: (_: string) => void;
+  handleItemClick?: (value: string) => void;
 }
 
 const FilterItem = ({
   title,
   filterList,
   isActive = false,
-  toggleOpen,
   currentValues,
-  handleFilter,
+  toggleOpen,
+  handleItemClick,
 }: Props) => {
   let filterButtonClass = classNames({
     [styles.filterButton]: true,
@@ -51,7 +51,7 @@ const FilterItem = ({
                   [styles.selected]: currentValues?.includes(item),
                 })}
                 key={index}
-                onClick={() => handleFilter && handleFilter(item)}
+                onClick={() => handleItemClick && handleItemClick(item)}
               >
                 {item}
               </li>
