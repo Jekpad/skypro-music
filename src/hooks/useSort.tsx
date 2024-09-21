@@ -1,7 +1,7 @@
 import { sortPlaylist } from "@/store/features/trackSlice";
 import { useAppDispatch } from "@/store/store";
 import { SortType } from "@/types/sort";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export type sortInitialValues = {
   name: string;
@@ -15,17 +15,20 @@ const useSort = (initialValues: sortInitialValues[]) => {
 
   const values = initialValues.map((item) => item.name);
 
-  const sort = (value: string) => {
-    const newValue = selectedValue === value ? undefined : value;
+  const sort = useCallback(
+    (value: string) => {
+      const newValue = selectedValue === value ? undefined : value;
 
-    setSelectedValue(newValue);
-    const direction = initialValues.find((item) => item.name === newValue)?.direction;
-    const type = initialValues.find((item) => item.name === newValue)?.type;
+      setSelectedValue(newValue);
+      const direction = initialValues.find((item) => item.name === newValue)?.direction;
+      const type = initialValues.find((item) => item.name === newValue)?.type;
 
-    if (!direction || !type) return;
+      if (!direction || !type) return;
 
-    dispatch(sortPlaylist({ direction, type }));
-  };
+      dispatch(sortPlaylist({ direction, type }));
+    },
+    [dispatch, initialValues, selectedValue]
+  );
 
   return { selectedValue, values, sort };
 };

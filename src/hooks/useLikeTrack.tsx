@@ -1,12 +1,9 @@
-"use client";
-
 import { handleError } from "@/components/Toast/Toast";
 import { dislikeTrack, likeTrack } from "@/services/api";
 import { setDislikeTrack, setLikeTrack } from "@/store/features/trackSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
 const useLikeTrack = (trackID: number) => {
-  // const tokens = useAppSelector(state => state.auth.rokes);
   const dispatch = useAppDispatch();
 
   const tokens = {

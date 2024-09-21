@@ -33,7 +33,8 @@ const FilterItem = ({
 
   let filerPopupCountClass = classNames({
     [styles.filterPopupCount]: true,
-    [styles.active]: isActive,
+    [styles.active]: currentValues?.length,
+    // [styles.active]: isActive,
   });
 
   return (
@@ -58,7 +59,8 @@ const FilterItem = ({
             ))}
           </ul>
         </div>
-        <div className={filerPopupCountClass}>{Object.values(filterList).length}</div>
+        <div className={filerPopupCountClass}>{currentValues?.length}</div>
+        {/* <div className={filerPopupCountClass}>{Object.values(filterList).length}</div> */}
       </div>
     </>
   );

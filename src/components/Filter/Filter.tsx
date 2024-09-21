@@ -1,7 +1,7 @@
 "use client";
 import FilterItem from "./FilterItem/FilterItem";
 import { getUniqueValues } from "@/helpers/getUniqueValues";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAppSelector } from "@/store/store";
 import styles from "./Filter.module.css";
 import useFilter from "@/hooks/useFilter";
@@ -18,8 +18,12 @@ const Filter = () => {
   const tracks = useAppSelector((state) => state.track.initialPlaylistState);
 
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const authorList = tracks ? getUniqueValues(tracks, "author") : [];
-  const genreList = tracks ? getUniqueValues(tracks, "genre") : [];
+  const authorList = useMemo(() => {
+    return tracks ? getUniqueValues(tracks, "author") : [];
+  }, [tracks]);
+  const genreList = useMemo(() => {
+    return tracks ? getUniqueValues(tracks, "genre") : [];
+  }, [tracks]);
 
   const { values: currentAuthors, filter: filterAuthor } = useFilter("author");
   const { values: currentGenres, filter: filterGenre } = useFilter("genre");
