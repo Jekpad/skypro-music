@@ -82,7 +82,10 @@ const filterPlaylistState = (
 
     return Object.entries(filtersByType).every(([type, values]) => {
       if (type === "search") {
-        return values.some((value) => track.name.toLowerCase().includes(value.toLowerCase()));
+        return (
+          values.some((value) => track.name.toLowerCase().includes(value.toLowerCase())) ||
+          values.some((value) => track.author.toLowerCase().includes(value.toLocaleLowerCase()))
+        );
       }
 
       if (type === "genre") {
