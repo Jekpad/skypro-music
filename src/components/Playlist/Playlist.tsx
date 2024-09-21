@@ -5,7 +5,7 @@ import PlaylistItemSkeleton from "./PlaylistItem/PlaylistItemSkeleton";
 import { useAppSelector } from "@/store/store";
 
 const Playlist = () => {
-  const tracks = useAppSelector((state) => state.track.initialPlaylistState);
+  const tracks = useAppSelector((state) => state.track.currentPlaylistState);
 
   return (
     <div className={styles.playlistContent}>
@@ -23,6 +23,7 @@ const Playlist = () => {
         {tracks === undefined && <PlaylistItemSkeleton items={20} />}
         {Array.isArray(tracks) &&
           tracks.map((track) => <PlaylistItem key={track.id} track={track} />)}
+        {Array.isArray(tracks) && tracks.length === 0 && "Треки не найдены"}
       </div>
     </div>
   );

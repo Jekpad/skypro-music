@@ -1,6 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { TrackType } from "@/types/tracks";
 import { fetchFavoriteTracks, getAllTracks } from "@/services/api";
+import { FilterType } from "@/types/filter";
+import { SortType } from "@/types/sort";
+import { act } from "react";
 
 type TrackStateType = {
   initialPlaylistState?: TrackType[];
@@ -10,6 +13,8 @@ type TrackStateType = {
   currentPlaylistTypeState: "All" | "Favorites" | "Сollection";
   isPlayingState: boolean;
   isShuffleState: boolean;
+  filters: FilterType[];
+  sort: Partial<Record<SortType["type"], SortType>>;
 };
 
 const initialState: TrackStateType = {
@@ -20,6 +25,8 @@ const initialState: TrackStateType = {
   currentPlaylistTypeState: "All",
   isPlayingState: false,
   isShuffleState: false,
+  filters: [],
+  sort: {},
 };
 
 export const getInitialPlaylist = createAsyncThunk<TrackType[], void, { rejectValue: string }>(
@@ -57,6 +64,38 @@ export const getFavoriteTrack = createAsyncThunk(
     }
   }
 );
+
+const filterPlaylistState = (
+  initialPlaylistState: TrackStateType["initialPlaylistState"],
+  filters: TrackStateType["filters"]
+): TrackStateType["currentPlaylistState"] => {
+  return initialPlaylistState?.filter((track) => {
+    if (filters.length <= 0) return true;
+
+    const filtersByType = filters.reduce<Record<string, string[]>>((acc, filter) => {
+      if (!acc[filter.type]) {
+        acc[filter.type] = [];
+      }
+      acc[filter.type].push(filter.value);
+      return acc;
+    }, {});
+
+    return Object.entries(filtersByType).every(([type, values]) => {
+      if (type === "search") {
+        return (
+          values.some((value) => track.name.toLowerCase().includes(value.toLowerCase())) ||
+          values.some((value) => track.author.toLowerCase().includes(value.toLocaleLowerCase()))
+        );
+      }
+
+      if (type === "genre") {
+        return values.some((value) => track.genre.includes(value));
+      }
+
+      return values.some((value) => track[type as keyof typeof track] === value);
+    });
+  });
+};
 
 const trackSlice = createSlice({
   name: "track",
@@ -134,6 +173,44 @@ const trackSlice = createSlice({
     setLikedPlaylist: (state, action: PayloadAction<TrackType[]>) => {
       state.likedPlaylistState = action.payload;
     },
+    filterPlaylist: (
+      state,
+      action: PayloadAction<{ operation: "add" | "delete"; filter: FilterType }>
+    ) => {
+      const { operation, filter } = action.payload;
+
+      if (operation === "add") {
+        if (filter.type === "search") {
+          state.filters = state.filters.filter((f) => f.type !== "search");
+          state.filters.push(filter);
+        } else {
+          state.filters.push(filter);
+        }
+      } else {
+        state.filters = state.filters.filter(
+          (f) => f.type !== filter.type || f.value !== filter.value
+        );
+      }
+
+      state.currentPlaylistState = filterPlaylistState(state.initialPlaylistState, state.filters);
+    },
+    sortPlaylist: (state, action: PayloadAction<SortType>) => {
+      state.sort[action.payload.type] = action.payload;
+
+      if (!state.currentPlaylistState) return;
+
+      if (action.payload.direction === "default") {
+        state.currentPlaylistState = filterPlaylistState(state.initialPlaylistState, state.filters);
+        return;
+      }
+
+      state.currentPlaylistState = [...state.currentPlaylistState].sort((a, b) => {
+        const dateA = new Date(a.release_date).getTime();
+        const dateB = new Date(b.release_date).getTime();
+
+        return action.payload.direction === "asc" ? dateB - dateA : dateA - dateB;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getInitialPlaylist.fulfilled, (state, action) => {
@@ -166,5 +243,7 @@ export const {
   setDislikeTrack,
   setLikeTrack,
   setLikedPlaylist,
+  filterPlaylist,
+  sortPlaylist,
 } = trackSlice.actions;
 export const trackReducer = trackSlice.reducer;

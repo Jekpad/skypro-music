@@ -36,10 +36,7 @@ const PlaylistItem = ({ track }: Props) => {
             </svg>
           </div>
           <div className={styles.trackTitleText}>
-            <span className={styles.trackTitleLink}>
-              {name}
-              {/* <span className={styles.trackTitleSpan}></span> */}
-            </span>
+            <span className={styles.trackTitleLink}>{name}</span>
           </div>
         </div>
         <div className={styles.trackAuthor}>
